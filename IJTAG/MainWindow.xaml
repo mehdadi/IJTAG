@@ -1,0 +1,31 @@
+﻿<Window x:Class="IJTAG.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="IJTAG Grapher" Height="350" Width="525">
+    <Grid Name="graph">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Menu Name="Mainmenu" Grid.Row="0" IsMainMenu="True">
+            <MenuItem Header="File"  AllowDrop="True">
+                <MenuItem Header="Open" Click="Import_Click" />
+                <MenuItem Header="Folder Parser" Click="MenuItem_Click" />
+            </MenuItem>
+            <Separator/>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="All Paths: " />
+                <TextBlock Name="PathsCount" />
+                <Separator/>
+                <TextBlock Text="  | Path with Size of:  " />
+                <ComboBox x:Name="combo" SelectionChanged="Paths_SelectionChanged" Width="55" />
+            </StackPanel>
+
+        </Menu>
+        <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" >
+            <Grid Name="Canvas">
+
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</Window>
