@@ -7,11 +7,11 @@ using System.Xml.Linq;
 
 namespace IJTAG
 {
-    public static class extentionStack
+    public static class extentionQueue
     {
-        public static Stack<T> Clone<T>(this Stack<T> stack)
+        public static Queue<T> Clone<T>(this Queue<T> Queue)
         {
-            return new Stack<T>(new Stack<T>(stack));
+            return new Queue<T>(new Queue<T>(Queue));
         }
     }
 
@@ -166,11 +166,11 @@ namespace IJTAG
 
         List<SIB> AllSIBs = new List<SIB>();
 
-        List<Stack<SIB>> AllPaths = new List<Stack<SIB>>();
-        public List<Tuple<Stack<SIB>, uint>> outputPaths = new List<Tuple<Stack<SIB>, uint>>();
+        List<Queue<SIB>> AllPaths = new List<Queue<SIB>>();
+        public List<Tuple<Queue<SIB>, UInt64>> outputPaths = new List<Tuple<Queue<SIB>, UInt64>>();
 
-        public long sumofLenght;
-        public long ConfigLenght;
+        public ulong sumofLenght;
+        public ulong ConfigLenght;
 
         public int Dept { get { return AllSIBs.Max(x => x.Level); } }
 
@@ -184,221 +184,148 @@ namespace IJTAG
             AllSIBs.Add(gateway);
             ParallelConstruction(root, gateway);
 
-            SIB TDILast = AllSIBs.Where(x => x.Level == 2).Last();
-            TDIFirst = AllSIBs.Where(x => x.Level == 2).First();
-            Stack<SIB> first = new Stack<SIB>();
+            SIB TDIFirst = AllSIBs.Where(x => x.Level == 2).First();
+            Queue<SIB> first = new Queue<SIB>();
             AllPaths.Add(first);
-            RecursivePaterns(TDILast, first);
-
+            RecursivePaterns2(TDIFirst, first);
 
             AllPaths = AllPaths.OrderByDescending(x => x.Count).ToList();
 
-
             outputPaths.Clear();
 
-            foreach (Stack<SIB> path in AllPaths)
+            foreach (Queue<SIB> path in AllPaths)
             {
                 if (AllSIBs.Where(x => x.neverCheckable == false).All(x => x.IsFullyChecked))
                 {
                     break;
                 }
 
-                outputPaths.Add(new Tuple<Stack<SIB>, uint>(path, ControlPath(path)));
+                //ProvideSIBPossibleCheckWithPath(path.Clone());
+
+                //         SIB, IsOpen
+                List<SIB> sibsForcedOpen = sibswithForcedOpen(path.Clone());
+
+                //if (AllSIBs.Where(x => x.ID != null).Where(x => x.IsFullyChecked == false).Any(x => path.Contains(x) == false || sibsForcedOpen.Contains(x)))
+                //{
+                //    continue;
+                //}
+
+                Dictionary<SIB, List<bool>> sibsTocheck = path.ToDictionary(x => x, y => new List<bool>() { true, false });
+
+                foreach (var s in sibsForcedOpen)
+                {
+                    sibsTocheck[s].RemoveAt(1);
+                }
+
+                outputPaths.Add(new Tuple<Queue<SIB>, UInt64>(path, ControlPath(path, sibsTocheck)));
+
             }
 
-            
-            //var totalPathLength = AllPaths.Select(y => new Tuple<Stack<SIB>, int>(y, y.Sum(s => s.SCLength)));//.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, y => y.Value);
-
-            //var SibstoCheck = AllSIBs.Select(x => new Tuple<SIB, bool, bool>(x, false, false));
-
-            /*outputPaths.Clear();
-            ControlAllPaths();
-
-            sumofLenght = outputPaths.Sum(x => x.Sum(s => s.SCLength));
-            ConfigLenght = outputPaths.Sum(x => x.Sum(s => s.SCLength) * x.Max(l => l.Level));
-            */
-              //outputPaths.
-
-            //var t = AllSIBs.Where(x => x.neverCheckable == false).Where(x => x.IsFullyChecked == false);
-
-            /*
-            foreach (var pat in AllPaths)
+            if (AllSIBs.Where(x => x.neverCheckable == false).All(x => x.IsFullyChecked))
             {
-                var Appliedpath = ApplyPath(pat);
-
-                foreach (var ap in Appliedpath)
+                foreach (var t in outputPaths)
                 {
-                    //if (ap.Item2
+                    sumofLenght += t.Item2;
+                    ConfigLenght += (t.Item2 * (ulong)t.Item1.Max(x => x.Level - 1));
                 }
             }
-
-            Dictionary<SIB, Tuple<bool, bool>> SibsControl = new Dictionary<SIB, Tuple<bool, bool>>();
-            Dictionary<Stack<SIB>, List<Tuple<SIB, bool, bool>>> Path_coverage = new Dictionary<Stack<SIB>, List<Tuple<SIB, bool, bool>>>();
-            foreach (var pat in AllPaths)
-            {
-                var Appliedpath = ApplyPath(pat);
-                Path_coverage.Add(pat, Appliedpath);
-
-                foreach (var Ap in Appliedpath)
-                {
-                    if (SibsControl.ContainsKey(Ap.Item1) == false)
-                    {
-                        SibsControl.Add(Ap.Item1, new Tuple<bool, bool>(Ap.Item2, Ap.Item3));
-                    }
-                    else
-                    {
-                        //if (SibsControl[Ap.Item1].Item1 == false &&
-
-                    }
-                }
-            }
-             * */
         }
 
-
-        uint ControlPath(Stack<SIB> path)
+        private List<SIB> sibswithForcedOpen(Queue<SIB> path)
         {
-            uint Len = 0;
+            List<SIB> res = new List<SIB>();
 
-            var clon = path.Clone();
-
-            while (clon.Count > 1)
+            while (path.Count > 1)
             {
-                SIB me = clon.Pop();
-
-                bool isClose;
-
-                if (me.Children.Count > 0 && me.Children.First() == clon.Peek())
+                SIB me = path.Dequeue();
+                if (me.Children.Count > 0 && me.Children.First() == path.Peek())
                 {
-                    isClose = false;
-                    //me.CheckedOpen++;
-                }
-                else
-                {
-                    isClose = true;
-                    //me.CheckedClose++;
-                }
-
-                if (isClose && me.Children.Count == 0)
-                {
-                    if (me.CheckedOpen == 0)
-                    {
-                        isClose = false;
-                    }
-                }
-
-                if (isClose)
-                {
-                    me.CheckedClose++;
-                    Len += 1;
-                }
-                else
-                {
-                    me.CheckedOpen++;
-                    Len += 1 + me.SCLength;
+                    res.Add(me);
                 }
             }
-            return Len;
+            return res;
         }
 
-        //         SIB,Closed,Opened
-        List<Tuple<SIB, bool, bool>> ApplyPath(Stack<SIB> path)
+        void RecursivePaterns2(SIB Node, Queue<SIB> path)
         {
-            List<Tuple<SIB, bool, bool>> list = new List<Tuple<SIB, bool, bool>>();
+            path.Enqueue(Node);
 
-            var clon = path.Clone();
-            while (clon.Count > 1)
+            if (Node.Level == 1)
             {
-                SIB me = clon.Pop();
-                if (me.IsBypassOnly)
-                {
-                    list.Add(new Tuple<SIB, bool, bool>(me, true, true));
-                }
-                else
-                {
-                    if (me.Children.Count > 0 && me.Children.First() == clon.Peek())
-                    {
-                        list.Add(new Tuple<SIB, bool, bool>(me, true, false));
-                    }
-                    else
-                    {
-                        list.Add(new Tuple<SIB, bool, bool>(me, false, true));
-                    }
-                }
+                //end of Path
+                return;
             }
-            return list;
-        }
 
-        private void ControlAllPaths()
-        {
-            foreach (Stack<SIB> path in AllPaths)
+            SIB parental = Node;
+            SIB dest = null;
+            while (dest == null)
             {
-                if (AllSIBs.Where(x => x.neverCheckable == false).All(x => x.IsFullyChecked))
-                {
+                dest = AllSIBs.Find(x => x.source == parental);
+                parental = parental.Parent;
+                if (parental == null)
                     break;
-                }
+            }
 
-                //outputPaths.Add(path);
-
-                var clon = path.Clone();
-                
-                while (clon.Count > 1)
+            //if (dest != null && Node.Level != 1)//akharin ghadam
+            {
+                if (Node.Children.Count > 0)
                 {
-                    SIB me = clon.Pop();
-                    if (me.Children.Count > 0 && me.Children.First() == clon.Peek())
-                    {
-                        me.CheckedOpen++;
-                    }
-                    else
-                    {
-                        me.CheckedClose++;
-                    }
+                    var copy = extentionQueue.Clone(path);
+                    AllPaths.Add(copy);
+                    RecursivePaterns2(Node.Children.First(), copy); ;
+                }
+                if (dest != null)
+                {
+                    RecursivePaterns2(dest, path);
                 }
             }
         }
 
-        SIB TDIFirst;
-
-        
-
-        void RecursivePaterns(SIB Node, Stack<SIB> path)
+        UInt64 ControlPath(Queue<SIB> path, Dictionary<SIB, List<bool>> sibstocheck)
         {
-            path.Push(Node);
-            if (Node != TDIFirst)
+            UInt64 SumOfLength = 0;
+            while (sibstocheck.Values.SelectMany(x => x).Count() > 0)
             {
-                if (Node.Children.Count == 0)
+                var copy = path.Clone();
+
+                UInt64 Length = 0;
+                while (copy.Count > 0)
                 {
-                    if (Node.source != null)
+                    SIB me = copy.Dequeue();
+
+                    if (sibstocheck[me].Count > 0)
                     {
-                        RecursivePaterns(Node.source, path);
-                    }
-                }
-                else
-                {
-                    if (path.Contains(Node.Children.Last()) == false)
-                    {
-                        var copy = extentionStack.Clone(path);
-                        AllPaths.Add(copy);
-                        RecursivePaterns(Node.Children.Last(), copy);
-                        if (Node.source != null)
+                        if (sibstocheck[me][0])
                         {
-                            RecursivePaterns(Node.source, path);
+                            me.CheckedOpen++;
+                            Length += me.SCLength + 1;
                         }
+                        else
+                        {
+                            me.CheckedClose++;
+                            Length += 1;
+                        }
+                        sibstocheck[me].RemoveAt(0);
                     }
                     else
                     {
-                        if (Node.source != null)
+                        if (me.Children.First() == copy.Peek())
                         {
-                            RecursivePaterns(Node.source, path);
+                            me.CheckedOpen++;
+                            Length += me.SCLength + 1;
+                        }
+                        else
+                        {
+                            me.CheckedClose++;
+                            Length += 1;
                         }
                     }
+
                 }
 
-                if (Node.Parent.Children.First() == Node)
-                {
-                    RecursivePaterns(Node.Parent, path);
-                }
+                SumOfLength += Length;
             }
+            return SumOfLength;
         }
 
         public void ParallelConstruction(XElement root, SIB parent)
@@ -423,7 +350,7 @@ namespace IJTAG
             }
         }
 
-        internal List<Stack<SIB>> getAllPaths() 
+        internal List<Queue<SIB>> getAllPaths() 
         {
             return AllPaths.OrderByDescending(x => x.Count).ToList();
         }

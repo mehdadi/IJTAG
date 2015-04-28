@@ -31,7 +31,7 @@ namespace IJTAG
             if (fl.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 System.IO.StreamWriter tx = System.IO.File.CreateText(fl.SelectedPath + "\\log.csv");
-                tx.WriteLine("FileName;Depth of nodes;All Paths;Paths to test;length of full test;length of configuration");
+                tx.WriteLine("FileName;number of nodes;Depth of nodes;General Paths to test;length of full test;length of configuration");
                 foreach (var file in System.IO.Directory.GetFiles(fl.SelectedPath, "*.xml", System.IO.SearchOption.AllDirectories))
                 {
                     exporter = new GraphExporter();
@@ -40,7 +40,7 @@ namespace IJTAG
                     System.Xml.Linq.XDocument doc = System.Xml.Linq.XDocument.Load(read);
                     exporter.Parse(doc.Element("Gateway"));
 
-                    tx.WriteLine(System.IO.Path.GetFileNameWithoutExtension(file) + ";" + exporter.Dept + ";" + exporter.getAllPaths().Count + ";" + exporter.outputPaths.Count + ";" + exporter.sumofLenght + ";" + exporter.ConfigLenght);
+                    tx.WriteLine(System.IO.Path.GetFileNameWithoutExtension(file) + ";" + (exporter.GetAllNodes().Count - 1) + ";" + (exporter.Dept - 1) + ";" + exporter.outputPaths.Count + ";" + exporter.sumofLenght + ";" + exporter.ConfigLenght);
 
                 }
                 tx.Close();
