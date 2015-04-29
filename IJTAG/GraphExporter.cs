@@ -167,10 +167,11 @@ namespace IJTAG
         List<SIB> AllSIBs = new List<SIB>();
 
         List<Queue<SIB>> AllPaths = new List<Queue<SIB>>();
-        public List<Tuple<Queue<SIB>, UInt64>> outputPaths = new List<Tuple<Queue<SIB>, UInt64>>();
+        public List<Tuple<Queue<SIB>, Tuple<UInt64, int>>> outputPaths = new List<Tuple<Queue<SIB>, Tuple<UInt64, int>>>();
 
         public ulong sumofLenght;
         public ulong ConfigLenght;
+        public int PathsChecked;
 
         public int Dept { get { return AllSIBs.Max(x => x.Level); } }
 
@@ -211,13 +212,18 @@ namespace IJTAG
                 //}
 
                 Dictionary<SIB, List<bool>> sibsTocheck = path.ToDictionary(x => x, y => new List<bool>() { true, false });
-
+                
+                foreach (var ch in path.ToList().Where(x=>x.CheckedOpen > 0))
+                {
+                    sibsTocheck[ch].Remove(true);
+                }
+                
                 foreach (var s in sibsForcedOpen)
                 {
-                    sibsTocheck[s].RemoveAt(1);
+                    sibsTocheck[s].Remove(false);
                 }
 
-                outputPaths.Add(new Tuple<Queue<SIB>, UInt64>(path, ControlPath(path, sibsTocheck)));
+                outputPaths.Add(new Tuple<Queue<SIB>, Tuple<UInt64, int>>(path, ControlPath(path, sibsTocheck)));
 
             }
 
@@ -225,8 +231,9 @@ namespace IJTAG
             {
                 foreach (var t in outputPaths)
                 {
-                    sumofLenght += t.Item2;
-                    ConfigLenght += (t.Item2 * (ulong)t.Item1.Max(x => x.Level - 1));
+                    sumofLenght += t.Item2.Item1;
+                    ConfigLenght += (t.Item2.Item1 * (ulong)t.Item1.Max(x => x.Level - 1));
+                    PathsChecked += t.Item2.Item2;
                 }
             }
         }
@@ -281,12 +288,14 @@ namespace IJTAG
             }
         }
 
-        UInt64 ControlPath(Queue<SIB> path, Dictionary<SIB, List<bool>> sibstocheck)
+        Tuple<UInt64, int> ControlPath(Queue<SIB> path, Dictionary<SIB, List<bool>> sibstocheck)
         {
             UInt64 SumOfLength = 0;
+            int countTimes = 0;
             while (sibstocheck.Values.SelectMany(x => x).Count() > 0)
             {
                 var copy = path.Clone();
+                countTimes++;
 
                 UInt64 Length = 0;
                 while (copy.Count > 0)
@@ -325,7 +334,7 @@ namespace IJTAG
 
                 SumOfLength += Length;
             }
-            return SumOfLength;
+            return new Tuple<UInt64, int>(SumOfLength, countTimes);
         }
 
         public void ParallelConstruction(XElement root, SIB parent)
