@@ -15,165 +15,22 @@ namespace IJTAG
         }
     }
 
-    public class SIB
-    {
-        public static int StringToInt(string s)
-        {
-            int d = 0;
-            int.TryParse(s, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out d);
-            return d;
-        }
+    
 
-        public static uint StringToUInt(string s)
-        {
-            uint d = 0;
-            uint.TryParse(s, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out d);
-            return d;
-        }
-
-        public override string ToString()
-        {
-            return "ID = " + ID + "(" + Level + "," + Column + ")" + Size;
-        }
-
-        public SIB(XElement Element, SIB parent)
-        {
-            this.Parent = parent;
-            if (parent != null)
-            {
-                parent.Children.Add(this);
-            }
-            this.Type = Element.Name.LocalName;
-
-            foreach (XAttribute att in Element.Attributes())
-            {
-                switch (att.Name.LocalName)
-                {
-                    case "ID":
-                        ID = att.Value;
-                        break;
-                    case "InstrumentID":
-                        InstrumentID = att.Value;
-                        break;
-                    case "SCPatterns":
-                        SCPattherns = StringToInt(att.Value);
-                        break;
-                    case "SCLength":
-                        SCLength = StringToUInt(att.Value);
-                        break;
-                    case "WIRLength":
-                        WIRLength = StringToInt(att.Value);
-                        break;
-
-                }
-            }
-        }
-
-        public SIB()
-        {
-            // Fake
-        }
-
-        //charactersitics
-        public readonly string Type;
-        public readonly string InstrumentID;
-        public readonly string ID;
-        public readonly int SCPattherns;
-        public readonly uint SCLength;
-        public readonly int WIRLength;
-        public readonly XElement RelatedElem;
-        
-        //Pattern Tested
-        public bool neverCheckable { get { return ID == null || Parent.Children.Last() == this; } }
-        public bool IsBypassOnly { get { return Children.Count == 0 && SCLength == 0; } }
-        public int CheckedOpen = 0;
-        public int CheckedClose = 0;
-        public bool IsFullyChecked
-        {
-            get
-            {
-                //if (IsBypassOnly)
-                //{
-                //    return CheckedClose > 0;
-                //}
-                //else
-                {
-                    return CheckedClose > 0 && CheckedOpen > 0;
-                }
-            }
-        }
-        //Relations
-        public readonly List<SIB> Children = new List<SIB>();
-        public readonly SIB Parent;
-        public SIB source;
-        //public SIB dest;
-        
-        #region For Drawing 
-        public int Level
-        {
-            get
-            {
-                int i = 0;
-                SIB temp = this;
-                while (temp != null)
-                {
-                    temp = temp.Parent;
-                    i++;
-                }
-                return i;
-            }
-        }
-
-        public int Size
-        {
-            get
-            {
-                return Math.Max(1, Children.Sum(x => x.Size));
-            }
-        }
-
-        public int Column
-        {
-            get
-            {
-                if (Parent != null)
-                {
-                    int myindex = Parent.Children.IndexOf(this);
-                    int adding = 0;
-                    if (myindex != 0)
-                        adding = Parent.Children.Take(myindex).Sum(x => x.Size);
-                    return Parent.Column + adding;
-                }
-                else
-                    return 0;
-            }
-        }
-
-
-        #endregion
-
-
-
-        //internal SIB Clone()
-        //{
-        //    throw new NotImplementedException();
-        //}
-    }
+    
 
     public class GraphExporter
     {
-        SIB gateway;
+        public List<Node> AllNodes = new List<Node>();
 
-        List<SIB> AllSIBs = new List<SIB>();
-
-        List<Queue<SIB>> AllPaths = new List<Queue<SIB>>();
-        public List<Tuple<Queue<SIB>, Tuple<UInt64, int>>> outputPaths = new List<Tuple<Queue<SIB>, Tuple<UInt64, int>>>();
+        public List<Queue<Node>> AllPaths = new List<Queue<Node>>();
+        public List<Tuple<Queue<Node>, Tuple<UInt64, int>>> outputPaths = new List<Tuple<Queue<Node>, Tuple<UInt64, int>>>();
 
         public ulong sumofLenght;
         public ulong ConfigLenght;
         public int PathsChecked;
 
-        public int Dept { get { return AllSIBs.Max(x => x.Level); } }
+        public int Dept { get { return AllNodes.Max(x => x.Level); } }
 
         public GraphExporter()
         {
@@ -181,22 +38,20 @@ namespace IJTAG
 
         public void Parse(XElement root)
         {
-            gateway = new SIB(root, null);
-            AllSIBs.Add(gateway);
-            ParallelConstruction(root, gateway);
+            ParallelConstruction(root.Elements(), null);
 
-            SIB TDIFirst = AllSIBs.Where(x => x.Level == 2).First();
-            Queue<SIB> first = new Queue<SIB>();
+            Node TDIFirst = AllNodes.Find(x => x.Parent == null && x.Sources.Count == 0);
+            Queue<Node> first = new Queue<Node>();
             AllPaths.Add(first);
-            RecursivePaterns2(TDIFirst, first);
-
+            RecursivePaterns3(TDIFirst, first);
+            
             AllPaths = AllPaths.OrderByDescending(x => x.Count).ToList();
 
             outputPaths.Clear();
 
-            foreach (Queue<SIB> path in AllPaths)
+            foreach (Queue<Node> path in AllPaths)
             {
-                if (AllSIBs.Where(x => x.neverCheckable == false).All(x => x.IsFullyChecked))
+                if (AllNodes.All(x => x.IsChecked))
                 {
                     break;
                 }
@@ -204,30 +59,30 @@ namespace IJTAG
                 //ProvideSIBPossibleCheckWithPath(path.Clone());
 
                 //         SIB, IsOpen
-                List<SIB> sibsForcedOpen = sibswithForcedOpen(path.Clone());
+                List<Node> sibsForcedOpen = sibswithForcedOpen(new Queue<Node>(path.ToList()));
 
                 //if (AllSIBs.Where(x => x.ID != null).Where(x => x.IsFullyChecked == false).Any(x => path.Contains(x) == false || sibsForcedOpen.Contains(x)))
                 //{
                 //    continue;
                 //}
 
-                Dictionary<SIB, List<bool>> sibsTocheck = path.ToDictionary(x => x, y => new List<bool>() { true, false });
-                
-                foreach (var ch in path.ToList().Where(x=>x.CheckedOpen > 0))
+                Dictionary<Node, List<bool>> sibsTocheck = path.ToDictionary(x => x, y => new List<bool>() { true, false });
+
+                foreach (var ch in path.ToList().Where(x => (x is SIB) && (x as SIB).CheckedOpen > 0))
                 {
                     sibsTocheck[ch].Remove(true);
                 }
-                
+
                 foreach (var s in sibsForcedOpen)
                 {
                     sibsTocheck[s].Remove(false);
                 }
 
-                outputPaths.Add(new Tuple<Queue<SIB>, Tuple<UInt64, int>>(path, ControlPath(path, sibsTocheck)));
+                outputPaths.Add(new Tuple<Queue<Node>, Tuple<UInt64, int>>(path, ControlPath(path, sibsTocheck)));
 
             }
 
-            if (AllSIBs.Where(x => x.neverCheckable == false).All(x => x.IsFullyChecked))
+            if (AllNodes.All(x => x.IsChecked))
             {
                 foreach (var t in outputPaths)
                 {
@@ -238,13 +93,13 @@ namespace IJTAG
             }
         }
 
-        private List<SIB> sibswithForcedOpen(Queue<SIB> path)
+        private List<Node> sibswithForcedOpen(Queue<Node> path)
         {
-            List<SIB> res = new List<SIB>();
+            List<Node> res = new List<Node>();
 
             while (path.Count > 1)
             {
-                SIB me = path.Dequeue();
+                Node me = path.Dequeue();
                 if (me.Children.Count > 0 && me.Children.First() == path.Peek())
                 {
                     res.Add(me);
@@ -252,22 +107,28 @@ namespace IJTAG
             }
             return res;
         }
+        
+        void RecursivePaterns3(Node Node, Queue<Node> path)
+        {
 
-        void RecursivePaterns2(SIB Node, Queue<SIB> path)
+
+        }
+        
+        void RecursivePaterns2(Node Node, Queue<Node> path)
         {
             path.Enqueue(Node);
 
-            if (Node.Level == 1)
-            {
-                //end of Path
-                return;
-            }
+            //if (Node.Level == 1)
+            //{
+            //    //end of Path
+            //    return;
+            //}
 
-            SIB parental = Node;
-            SIB dest = null;
+            Node parental = Node;
+            Node dest = null;
             while (dest == null)
             {
-                dest = AllSIBs.Find(x => x.source == parental);
+                dest = AllNodes.Find(x => x.Sources.Contains(parental));
                 parental = parental.Parent;
                 if (parental == null)
                     break;
@@ -277,7 +138,7 @@ namespace IJTAG
             {
                 if (Node.Children.Count > 0)
                 {
-                    var copy = extentionQueue.Clone(path);
+                    var copy = new Queue<Node>(path.ToList());
                     AllPaths.Add(copy);
                     RecursivePaterns2(Node.Children.First(), copy); ;
                 }
@@ -288,11 +149,11 @@ namespace IJTAG
             }
         }
 
-        Tuple<UInt64, int> ControlPath(Queue<SIB> path, Dictionary<SIB, List<bool>> sibstocheck)
+        Tuple<UInt64, int> ControlPath(Queue<Node> path, Dictionary<Node, List<bool>> Nodestocheck)
         {
             UInt64 SumOfLength = 0;
             int countTimes = 0;
-            while (sibstocheck.Values.SelectMany(x => x).Count() > 0)
+            while (Nodestocheck.Values.SelectMany(x => x).Count() > 0)
             {
                 var copy = path.Clone();
                 countTimes++;
@@ -300,36 +161,77 @@ namespace IJTAG
                 UInt64 Length = 0;
                 while (copy.Count > 0)
                 {
-                    SIB me = copy.Dequeue();
-
-                    if (sibstocheck[me].Count > 0)
+                    Node me = copy.Dequeue();
+                    if (me is SIB)
                     {
-                        if (sibstocheck[me][0])
+                        SIB sib = me as SIB;
+
+                        if (Nodestocheck[me].Count > 0)
                         {
-                            me.CheckedOpen++;
-                            Length += me.SCLength + 1;
+                            if (Nodestocheck[me][0])
+                            {
+                                sib.CheckedOpen++;
+                                Length += sib.SCLength + 1;
+                            }
+                            else
+                            {
+                                sib.CheckedClose++;
+                                Length += 1;
+                            }
                         }
                         else
                         {
-                            me.CheckedClose++;
-                            Length += 1;
+                            if (me.Children.Count > 0 && copy.Count > 0 && me.Children.First() == copy.Peek())
+                            {
+                                sib.CheckedOpen++;
+                                Length += sib.SCLength + 1;
+                            }
+                            else
+                            {
+                                sib.CheckedClose++;
+                                Length += 1;
+                            }
                         }
-                        sibstocheck[me].RemoveAt(0);
+                        if (sib.CheckedClose > 0 && sib.CheckedOpen > 0)
+                        {
+                            me.IsChecked = true;
+                        }
+                    }
+                    else if (me is SCB)
+                    {
+                        SCB scb = me as SCB;
+                        if (Nodestocheck[me].Count > 0)
+                        {
+                            if (Nodestocheck[me][0])
+                            {
+                                scb.checkcounter[0]++;
+                                Length += scb.SCLength[0] + 1;
+                            }
+                            else
+                            {
+                                scb.checkcounter[1]++;
+                                Length += scb.SCLength[1] + 1;
+                            }
+                        }
+                        else
+                        {
+                            scb.checkcounter[scb.ShorterIndex]++;
+                            Length += scb.SCLength[scb.ShorterIndex];
+                        }
+                        if (scb.checkcounter[0] > 0 && scb.checkcounter[1] > 0)
+                        {
+                            me.IsChecked = true;
+                        }
                     }
                     else
                     {
-                        if (me.Children.First() == copy.Peek())
-                        {
-                            me.CheckedOpen++;
-                            Length += me.SCLength + 1;
-                        }
-                        else
-                        {
-                            me.CheckedClose++;
-                            Length += 1;
-                        }
+                        Length += (me as TDR).SCLength;
+                        me.IsChecked = true;
                     }
-
+                    if (Nodestocheck[me].Count > 0)
+                    {
+                        Nodestocheck[me].RemoveAt(0);
+                    }
                 }
 
                 SumOfLength += Length;
@@ -337,45 +239,32 @@ namespace IJTAG
             return new Tuple<UInt64, int>(SumOfLength, countTimes);
         }
 
-        public void ParallelConstruction(XElement root, SIB parent)
+        public void ParallelConstruction(IEnumerable<XElement> childs, Node parent)
         {
-            var childs = root.Elements("SIB");
+            //var childs = root.Elements();
+            
             if (childs.Count() > 0)
             {
                 var e = childs.GetEnumerator();
                 e.MoveNext();
-                var last = new SIB(e.Current, parent);
-                AllSIBs.Add(last);
-                ParallelConstruction(e.Current, last);
+                var last = Node.Create(e.Current, parent);
+                AllNodes.Add(last);
+                ParallelConstruction(e.Current.Elements(), last);
 
                 while (e.MoveNext())
                 {
-                    SIB me = new SIB(e.Current, parent);
-                    AllSIBs.Add(me);
-                    me.source = last;
-                    ParallelConstruction(e.Current, me);
+                    Node me = Node.Create(e.Current, parent);
+                    AllNodes.Add(me);
+                    me.Sources.Add(last);
+                    ParallelConstruction(e.Current.Elements(), me);
                     last = me;
                 }
             }
         }
 
-        internal List<Queue<SIB>> getAllPaths() 
-        {
-            return AllPaths.OrderByDescending(x => x.Count).ToList();
-        }
-
         internal void Dispose()
         {
         }
-
-        internal List<SIB> GetAllNodes()
-        {
-            return AllSIBs;//.Clone();
-        }
-        
-        internal SIB GetGateway()
-        {
-            return gateway;//.Clone();
-        }
+      
     }
 }

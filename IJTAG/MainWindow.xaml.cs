@@ -33,17 +33,39 @@ namespace IJTAG
                 System.IO.StreamWriter tx = System.IO.File.CreateText(fl.SelectedPath + "\\log.csv");
                 StringBuilder st = new StringBuilder();
 
-                tx.WriteLine("FileName;number of nodes;Depth of nodes;Paths to test;length of full test;length of configuration");
+                st.Append("FileName;");
+                st.Append("number of nodes;");
+                st.Append("SCB nodes;");
+                st.Append("SIB nodes;");
+                st.Append("TDR nodes;");
+                st.Append("Depth of nodes;");
+                st.Append("Paths to test;");
+                st.Append("length of full test;");
+                st.Append("length of configuration;");
+
+                tx.WriteLine(st.ToString());
+
                 foreach (var file in System.IO.Directory.GetFiles(fl.SelectedPath, "*.xml", System.IO.SearchOption.AllDirectories))
                 {
                     exporter = new GraphExporter();
 
                     System.IO.StreamReader read = new System.IO.StreamReader(file);
                     System.Xml.Linq.XDocument doc = System.Xml.Linq.XDocument.Load(read);
+                    System.GC.Collect();
+
                     exporter.Parse(doc.Element("Gateway"));
-
-                    tx.WriteLine(System.IO.Path.GetFileNameWithoutExtension(file) + ";" + (exporter.GetAllNodes().Count - 1) + ";" + (exporter.Dept - 1) + ";" + exporter.PathsChecked + ";" + exporter.sumofLenght + ";" + exporter.ConfigLenght);
-
+                    st.Clear();
+                    st.Append(System.IO.Path.GetFileNameWithoutExtension(file) + ";");
+                    st.Append((exporter.AllNodes.Count) + ";");
+                    st.Append(exporter.AllNodes.Count(x => x is SCB) + ";");
+                    st.Append(exporter.AllNodes.Count(x => x is SIB) + ";");
+                    st.Append(exporter.AllNodes.Count(x => x is TDR) + ";");
+                    st.Append((exporter.Dept) + ";");
+                    st.Append(exporter.PathsChecked + ";");
+                    st.Append(exporter.sumofLenght + ";");
+                    st.Append(exporter.ConfigLenght + ";");
+                    tx.WriteLine(st.ToString());
+                    tx.Flush();
                 }
                 tx.Close();
                 tx.Dispose();
@@ -67,20 +89,20 @@ namespace IJTAG
                     System.Xml.Linq.XDocument doc = System.Xml.Linq.XDocument.Load(read);
                     exporter.Parse(doc.Element("Gateway"));
 
-                    Console.WriteLine(fl.FileName + "had " + exporter.getAllPaths().Count + " Paths with lenght of " + exporter.sumofLenght + " in " + exporter.outputPaths.Count); 
+                    //Console.WriteLine(fl.FileName + "had " + exporter.getAllPaths().Count + " Paths with lenght of " + exporter.sumofLenght + " in " + exporter.outputPaths.Count); 
                 }
                 //catch
                 //{
                 //}
             }
 
-            var AllPathes = exporter.getAllPaths();
-            PathsCount.Text = AllPathes.Count.ToString();
+            //var AllPathes = exporter.getAllPaths();
+            //PathsCount.Text = AllPathes.Count.ToString();
 
-            foreach (var pat in AllPathes)
-            {
-                combo.Items.Add(new ComboBoxItem() { Content = pat.Count, Tag = pat });
-            }
+            //foreach (var pat in AllPathes)
+            //{
+            //    combo.Items.Add(new ComboBoxItem() { Content = pat.Count, Tag = pat });
+            //}
 
             BuildCanvas();
         }
@@ -90,6 +112,7 @@ namespace IJTAG
 
         void BuildCanvas()
         {
+            /*
             Canvas.Children.Clear();
             Canvas.RowDefinitions.Clear();
             Canvas.ColumnDefinitions.Clear();
@@ -126,7 +149,7 @@ namespace IJTAG
                     tooltipgrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Auto) });
                     tooltipgrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Auto) });
 
-                    TextBlock tb1 = new TextBlock() { Text = sib.Type + " " + sib.ID, FontWeight = FontWeights.Bold };
+                    TextBlock tb1 = new TextBlock() { Text = typeof(sib).Name + " " + sib.ID, FontWeight = FontWeights.Bold };
                     Grid.SetColumn(tb1, 0); Grid.SetRow(tb1, 0); Grid.SetColumnSpan(tb1, 2); tooltipgrid.Children.Add(tb1);
                     TextBlock tb2 = new TextBlock() { Text = "SC Length:  " };
                     Grid.SetColumn(tb2, 0); Grid.SetRow(tb2, 1); tooltipgrid.Children.Add(tb2);
@@ -221,24 +244,46 @@ namespace IJTAG
                     }
                 }
             }
+             * */
         }
 
         Dictionary<SIB, Border> allborders = new Dictionary<SIB, Border>();
 
         private void Paths_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            foreach (var brd in allborders.Values)
-            {
-                brd.BorderBrush = Brushes.Black;
-            }
+            //foreach (var brd in allborders.Values)
+            //{
+            //    brd.BorderBrush = Brushes.Black;
+            //}
 
-            foreach (SIB sib in ((combo.SelectedItem as ComboBoxItem).Tag as Stack<SIB>))
+            //foreach (SIB sib in ((combo.SelectedItem as ComboBoxItem).Tag as Stack<SIB>))
+            //{
+            //    allborders[sib].BorderBrush = Brushes.Red;
+            //}
+        }
+
+        private void Create_Click(object sender, RoutedEventArgs e)
+        {
+            int maxLen = Node.StringToInt(MaxLen.Text);
+            int minLen = Node.StringToInt(MinLen.Text);
+            int numbOfelems = Node.StringToInt(elements.Text);
+            int dept = Node.StringToInt(Dept.Text);
+
+            Builder builder = new Builder(numbOfelems, dept, minLen, maxLen);
+
+            System.Windows.Forms.SaveFileDialog fl = new System.Windows.Forms.SaveFileDialog();
+            fl.Filter = "XML File (*.Xml)|";
+            if (fl.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                allborders[sib].BorderBrush = Brushes.Red;
+
+                //System.IO.StreamReader read = new System.IO.StreamReader(fl.FileName);
+
+                //System.Xml.Linq.XDocument doc = System.Xml.Linq.XDocument(builder.Create());
+                System.Xml.Linq.XDocument doc = new System.Xml.Linq.XDocument(builder.Create());
+                doc.Save(fl.FileName + ".xml");
+
             }
 
         }
-
-        
     }
 }

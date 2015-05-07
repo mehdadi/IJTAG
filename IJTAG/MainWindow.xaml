@@ -13,19 +13,44 @@
                 <MenuItem Header="Folder Parser" Click="MenuItem_Click" />
             </MenuItem>
             <Separator/>
-            <StackPanel Orientation="Horizontal">
+            <!--<StackPanel Orientation="Horizontal">
                 <TextBlock Text="All Paths: " />
                 <TextBlock Name="PathsCount" />
                 <Separator/>
                 <TextBlock Text="  | Path with Size of:  " />
                 <ComboBox x:Name="combo" SelectionChanged="Paths_SelectionChanged" Width="55" />
-            </StackPanel>
-
+            </StackPanel>-->
         </Menu>
-        <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" >
-            <Grid Name="Canvas">
+        <TabControl Grid.Row="1">
+            <TabItem Header="Graph View" >
+                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" >
+                    <Grid Name="Canvas">
 
-            </Grid>
-        </ScrollViewer>
+                    </Grid>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="Random creator">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <UniformGrid Columns="2" Rows="4" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top">
+                        <Label Content="Number of Elements:" />
+                        <TextBox Name="elements" Margin="2"/>
+                        <Label Content="Max possible Len:" />
+                        <TextBox Name="MaxLen" Margin="2"/>
+                        <Label Content="Min possible Len:" />
+                        <TextBox Name="MinLen" Margin="2" />
+                        <Label Content="Max Dept:" />
+                        <TextBox Name="Dept" Margin="2"/>
+                    </UniformGrid>
+                    <UniformGrid Columns="1" Rows="1" Grid.Row="1" HorizontalAlignment="Right" Margin="2">
+                        <Button Content="Create" Margin="1" Click="Create_Click" />
+                    </UniformGrid>
+                </Grid>
+                
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>
