@@ -34,14 +34,18 @@ namespace IJTAG
                 StringBuilder st = new StringBuilder();
 
                 st.Append("FileName;");
-                st.Append("number of nodes;");
-                st.Append("SCB nodes;");
                 st.Append("SIB nodes;");
+                st.Append("SCB nodes;");
                 st.Append("TDR nodes;");
-                st.Append("Depth of nodes;");
-                st.Append("Paths to test;");
-                st.Append("length of full test;");
-                st.Append("length of configuration;");
+                st.Append("Max Depth;");
+                st.Append("Total TDR Lenght;");
+                st.Append("Sessions;");
+                st.Append("digging Alg conf time ;");
+                st.Append("Hollowing Alg conf time ;");
+                st.Append("test time;");
+                st.Append("Digging TotalTime;");
+                st.Append("Hollowing TotalTime;");
+
 
                 tx.WriteLine(st.ToString());
 
@@ -54,17 +58,22 @@ namespace IJTAG
                     System.GC.Collect();
 
                     exporter.Parse(doc.Element("Gateway"));
+
                     st.Clear();
                     st.Append(System.IO.Path.GetFileNameWithoutExtension(file) + ";");
-                    st.Append((exporter.AllNodes.Count) + ";");
-                    st.Append(exporter.AllNodes.Count(x => x is SCB) + ";");
-                    st.Append(exporter.AllNodes.Count(x => x is SIB) + ";");
-                    st.Append(exporter.AllNodes.Count(x => x is TDR) + ";");
+                    st.Append(exporter.SIBs + ";");
+                    st.Append(exporter.SCBs + ";");
+                    st.Append(exporter.TDRs + ";");
                     st.Append((exporter.Dept) + ";");
-                    st.Append(exporter.PathsChecked + ";");
+                    st.Append(exporter.LengthofTDRs.ToString() + ";");
+                    st.Append(exporter.Sessions_leng.Count + ";");
+                    st.Append(exporter.SumConfigLenghtDiggingDown + ";");
+                    st.Append(exporter.SumConfigLenghtHollowingUP + ";");
                     st.Append(exporter.sumofLenght + ";");
-                    st.Append(exporter.ConfigLenght + ";");
+                    st.Append((exporter.SumConfigLenghtDiggingDown + exporter.sumofLenght).ToString() + ";");
+                    st.Append((exporter.SumConfigLenghtHollowingUP + exporter.sumofLenght).ToString() + ";");
                     tx.WriteLine(st.ToString());
+                    Console.WriteLine(st.ToString());
                     tx.Flush();
                 }
                 tx.Close();
@@ -88,22 +97,23 @@ namespace IJTAG
                     System.IO.StreamReader read = new System.IO.StreamReader(fl.FileName);
                     System.Xml.Linq.XDocument doc = System.Xml.Linq.XDocument.Load(read);
                     exporter.Parse(doc.Element("Gateway"));
-
+                    StringBuilder st = new StringBuilder();
+                    foreach (var s in exporter.Sessions_leng.Select(x => x.Item1))
+                    {
+                        st.AppendLine("SeSSION-------------");
+                        while (s.Count > 0)
+                        {
+                            var elem = s.Dequeue();
+                            st.AppendLine(elem.type.ToString()+ " " + elem.ID.ToString());
+                        }
+                    }
+                    System.Diagnostics.Trace.Write(st.ToString());
                     //Console.WriteLine(fl.FileName + "had " + exporter.getAllPaths().Count + " Paths with lenght of " + exporter.sumofLenght + " in " + exporter.outputPaths.Count); 
                 }
                 //catch
                 //{
                 //}
             }
-
-            //var AllPathes = exporter.getAllPaths();
-            //PathsCount.Text = AllPathes.Count.ToString();
-
-            //foreach (var pat in AllPathes)
-            //{
-            //    combo.Items.Add(new ComboBoxItem() { Content = pat.Count, Tag = pat });
-            //}
-
             BuildCanvas();
         }
 
@@ -251,15 +261,7 @@ namespace IJTAG
 
         private void Paths_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            //foreach (var brd in allborders.Values)
-            //{
-            //    brd.BorderBrush = Brushes.Black;
-            //}
 
-            //foreach (SIB sib in ((combo.SelectedItem as ComboBoxItem).Tag as Stack<SIB>))
-            //{
-            //    allborders[sib].BorderBrush = Brushes.Red;
-            //}
         }
 
         private void Create_Click(object sender, RoutedEventArgs e)
