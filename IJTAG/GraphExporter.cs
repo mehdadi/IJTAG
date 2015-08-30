@@ -19,6 +19,20 @@ namespace IJTAG
     {
         public List<Node> AllNodes = new List<Node>();
 
+        public class MatrixCounter
+        {
+            public int count = 0;
+            public void Add()
+            {
+                count++;
+            }
+            public override string ToString()
+            {
+                return count.ToString();
+            }
+        }
+        public Dictionary<Tuple<Node, Node>, MatrixCounter> MatrixOfTestability = new Dictionary<Tuple<Node, Node>, MatrixCounter>();
+
         public List<Queue<Node>> AllPaths = new List<Queue<Node>>();
         public List<Tuple<Queue<Node>, UInt64>> Sessions_leng = new List<Tuple<Queue<Node>, UInt64>>();
 
@@ -107,13 +121,79 @@ namespace IJTAG
         {
             ParallelConstruction(root.Elements(), null);
 
-            Node TDIFirst = AllNodes.Find(x => x.Parent == null && x.Sources.Count == 0);
+            Node TDIFirst = AllNodes.Find(x => x.Parent == null && x.Source == null);
 
             while (AllNodes.All(x => x.IsChecked) == false)
             {
                 Queue<Node> Path = new Queue<Node>();
                 UInt64 len = DynamicDigingPathFinder(TDIFirst, Path);
                 Sessions_leng.Add(new Tuple<Queue<Node>, ulong>(Path, len));
+            }
+
+            MakeMatrix();
+        }
+
+        private void MakeMatrix()
+        {
+            foreach (Node nd1 in AllNodes)
+            {
+                foreach (Node nd2 in AllNodes)
+                {
+                    if (nd2 != nd1)
+                    {
+                        MatrixOfTestability.Add(new Tuple<Node, Node>(nd1, nd2), new MatrixCounter());
+                    }
+                }
+            }
+
+            /*  KAFTAR BA KAFTAR
+             * 
+            foreach (Node nd1 in AllNodes.Where(x=>x is TDR))
+            {
+                foreach (Node nd2 in AllNodes.Where(x => x is TDR))
+                {
+                    if (nd2 != nd1)
+                        MatrixOfTestability.Add(new Tuple<Node, Node>(nd1, nd2), 0);
+                }
+            }
+            foreach (Node nd1 in AllNodes.Where(x => x is SCB))
+            {
+                foreach (Node nd2 in AllNodes.Where(x => x is SCB))
+                {
+                    if (nd2 != nd1)
+                        MatrixOfTestability.Add(new Tuple<Node, Node>(nd1, nd2), 0);
+                }
+            }
+            
+            foreach (Node nd1 in AllNodes.Where(x => x is SIB))
+            {
+                foreach (Node nd2 in AllNodes.Where(x => x is SIB))
+                {
+                    if (nd2 != nd1)
+                        MatrixOfTestability.Add(new Tuple<Node, Node>(nd1, nd2), 0);
+                }
+            }
+             * 
+             * */
+            //matrix ready
+
+            foreach (var path in Sessions_leng.Select(X=>X.Item1))
+            {
+                foreach (var key in MatrixOfTestability.Select(x => x.Key))
+                {
+                    if (path.Contains(key.Item1) == true && path.Contains(key.Item2) == false)
+                    {
+                        MatrixOfTestability[key].Add();
+                    }
+                }
+            }
+
+            foreach (var mat in MatrixOfTestability.Select(x => x.Key))
+            {
+                //if (mat.Item1 is TDR && mat.Item2 is TDR) // if 
+                {
+                    MatrixOfTestability[mat].Add();
+                }
             }
         }
 
@@ -133,7 +213,7 @@ namespace IJTAG
                 Node parental = Node;
                 while (next == null)
                 {
-                    next = AllNodes.Find(x => x.Sources.Contains(parental));
+                    next = AllNodes.Find(x => x.Source == (parental));
                     parental = parental.Parent;
                     if (parental == null)
                         break;
@@ -227,7 +307,7 @@ namespace IJTAG
                 {
                     Node me = Node.Create(e.Current, parent);
                     AllNodes.Add(me);
-                    me.Sources.Add(last);
+                    me.Source = (last);
                     ParallelConstruction(e.Current.Elements(), me);
                     last = me;
                 }

@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using GraphSharp.Controls;
+using QuickGraph;
 
 namespace IJTAG
 {
@@ -20,13 +22,27 @@ namespace IJTAG
     /// </summary>
     public partial class MainWindow : Window
     {
+        WPFExtensions.Controls.ZoomControl zoom = new WPFExtensions.Controls.ZoomControl();
+        PocGraphLayout graphLayout = new PocGraphLayout();
+
         GraphExporter exporter;
+
         public MainWindow()
         {
             InitializeComponent();
+
+            zoom.Content = graphLayout;
+            zoom.Mode = WPFExtensions.Controls.ZoomControlModes.Original;
+
+            GeneralGrid.Children.Add(zoom);
+
+            zoom.ZoomBoxOpacity = 0.5;
+            zoom.Background = Brushes.White;
         }
+
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
+            // generic Log Parser
             System.Windows.Forms.FolderBrowserDialog fl = new System.Windows.Forms.FolderBrowserDialog();
             if (fl.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
@@ -85,6 +101,8 @@ namespace IJTAG
         }
         private void Import_Click(object sender, RoutedEventArgs e)
         {
+            // File oppener
+
             exporter = new GraphExporter();
             System.Windows.Forms.OpenFileDialog fl = new System.Windows.Forms.OpenFileDialog();
             fl.Filter = "XML File (*.Xml)|";
@@ -92,27 +110,23 @@ namespace IJTAG
 
             if (fl.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                //try
-                {
-                    System.IO.StreamReader read = new System.IO.StreamReader(fl.FileName);
-                    System.Xml.Linq.XDocument doc = System.Xml.Linq.XDocument.Load(read);
-                    exporter.Parse(doc.Element("Gateway"));
-                    StringBuilder st = new StringBuilder();
-                    foreach (var s in exporter.Sessions_leng.Select(x => x.Item1))
-                    {
-                        st.AppendLine("SeSSION-------------");
-                        while (s.Count > 0)
-                        {
-                            var elem = s.Dequeue();
-                            st.AppendLine(elem.type.ToString()+ " " + elem.ID.ToString());
-                        }
-                    }
-                    System.Diagnostics.Trace.Write(st.ToString());
-                    //Console.WriteLine(fl.FileName + "had " + exporter.getAllPaths().Count + " Paths with lenght of " + exporter.sumofLenght + " in " + exporter.outputPaths.Count); 
-                }
-                //catch
+                System.IO.StreamReader read = new System.IO.StreamReader(fl.FileName);
+                System.Xml.Linq.XDocument doc = System.Xml.Linq.XDocument.Load(read);
+                exporter.Parse(doc.Element("Gateway"));
+                
+                // making paths in console trace.
+                //StringBuilder st = new StringBuilder();
+                //foreach (var s in exporter.Sessions_leng.Select(x => x.Item1))
                 //{
+                //    st.AppendLine("SeSSION-------------");
+                //    while (s.Count > 0)
+                //    {
+                //        var elem = s.Dequeue();
+                //        st.AppendLine(elem.type.ToString() + " " + elem.ID.ToString());
+                //    }
                 //}
+                //System.Diagnostics.Trace.Write(st.ToString());
+
             }
             BuildCanvas();
         }
@@ -122,146 +136,63 @@ namespace IJTAG
 
         void BuildCanvas()
         {
-            /*
-            Canvas.Children.Clear();
-            Canvas.RowDefinitions.Clear();
-            Canvas.ColumnDefinitions.Clear();
+            PocGraph pocGraph = new PocGraph(false);
+            exporter.AllNodes.ForEach(x => pocGraph.AddVertex(x));
 
-            var Allsibs = exporter.GetAllNodes();
-            SIB gateway = exporter.GetGateway();
-            int MaxLevel = Allsibs.Max(x => x.Level);
-
-            for (int i = 0; i < gateway.Size; i++)
+            foreach (var node in exporter.AllNodes)
             {
-                Canvas.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Auto) });
-            }
-
-            for (int i = 0; i < MaxLevel; i++)
-            {
-                Canvas.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1, GridUnitType.Auto) });
-            }
-
-            for (int i = 1; i <= MaxLevel; i++)
-            {
-                var thisLevel = Allsibs.FindAll(x => x.Level == i);
-                for (int j = 0; j < thisLevel.Count; j++)
+                if (node.Source != null)
                 {
-                    SIB sib = thisLevel[j];
-
-                    #region tooltip
-                    Grid tooltipgrid = new Grid();
-                    tooltipgrid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1, GridUnitType.Auto) });
-                    tooltipgrid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1, GridUnitType.Auto) });
-                    tooltipgrid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1, GridUnitType.Auto) });
-                    tooltipgrid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1, GridUnitType.Auto) });
-                    tooltipgrid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1, GridUnitType.Auto) });
-                    tooltipgrid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1, GridUnitType.Auto) });
-                    tooltipgrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Auto) });
-                    tooltipgrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Auto) });
-
-                    TextBlock tb1 = new TextBlock() { Text = typeof(sib).Name + " " + sib.ID, FontWeight = FontWeights.Bold };
-                    Grid.SetColumn(tb1, 0); Grid.SetRow(tb1, 0); Grid.SetColumnSpan(tb1, 2); tooltipgrid.Children.Add(tb1);
-                    TextBlock tb2 = new TextBlock() { Text = "SC Length:  " };
-                    Grid.SetColumn(tb2, 0); Grid.SetRow(tb2, 1); tooltipgrid.Children.Add(tb2);
-                    TextBlock tb3 = new TextBlock() { Text = sib.SCLength.ToString() };
-                    Grid.SetColumn(tb3, 1); Grid.SetRow(tb3, 1); tooltipgrid.Children.Add(tb3);
-                    TextBlock tb4 = new TextBlock() { Text = "With All Paths Open Config checked: "  };
-                    Grid.SetColumn(tb4, 0); Grid.SetRow(tb4, 2); tooltipgrid.Children.Add(tb4);
-                    TextBlock tb5 = new TextBlock() { Text = sib.CheckedOpen.ToString() };
-                    Grid.SetColumn(tb5, 1); Grid.SetRow(tb5, 2); tooltipgrid.Children.Add(tb5);
-                    TextBlock tb6 = new TextBlock() { Text = "With All Paths Close Config checked: " };
-                    Grid.SetColumn(tb6, 0); Grid.SetRow(tb6, 3); tooltipgrid.Children.Add(tb6);
-                    TextBlock tb7 = new TextBlock() { Text = sib.CheckedClose.ToString() };
-                    Grid.SetColumn(tb7, 1); Grid.SetRow(tb7, 3); tooltipgrid.Children.Add(tb7);
-                    #endregion
-
-                    Border brd = new Border() { MinWidth = 16, ToolTip = tooltipgrid, Background = Brushes.White, BorderBrush = Brushes.Black, BorderThickness = new Thickness(2), Margin = new Thickness(distXrect), HorizontalAlignment = System.Windows.HorizontalAlignment.Stretch, VerticalAlignment = System.Windows.VerticalAlignment.Center };
-                    allborders.Add(sib, brd);
-                    TextBlock txt = new TextBlock() { Text = sib.ID, TextWrapping = TextWrapping.Wrap, HorizontalAlignment = System.Windows.HorizontalAlignment.Center, Margin = new Thickness(2) };
-                    if (sib.ID == null)
-                    {
-                        txt.Text = "Gateway";
-                    }
-                    brd.Child = txt;
-                    Grid.SetColumn(brd, sib.Column);
-                    Grid.SetRow(brd, sib.Level - 1);
-                    Grid.SetColumnSpan(brd, sib.Size);
-                    Canvas.Children.Add(brd);
-
-                    if (i != 1 && (sib.Parent.Children.First() == sib || sib.Parent.Children.Last() == sib))
-                    {
-                        int uniqeChild = 0;
-                        if (sib.Parent.Children.Count == 1)
-                        {
-                            uniqeChild = 7;
-                            Path arrow = new Path() { Stroke = Brushes.Black, StrokeThickness = 1, FlowDirection = FlowDirection.LeftToRight, VerticalAlignment = VerticalAlignment.Center, HorizontalAlignment = HorizontalAlignment.Center };
-                            GeometryGroup geomGroup = new GeometryGroup();
-                            LineGeometry line1 = new LineGeometry() { StartPoint = new Point(4 - uniqeChild, 15), EndPoint = new Point(0 - uniqeChild, 20) };
-                            LineGeometry line2 = new LineGeometry() { StartPoint = new Point(0 - uniqeChild, 0), EndPoint = new Point(0 - uniqeChild, 20) };
-                            LineGeometry line3 = new LineGeometry() { StartPoint = new Point(-4 - uniqeChild, 15), EndPoint = new Point(0 - uniqeChild, 20) };
-                            geomGroup.Children.Add(line1);
-                            geomGroup.Children.Add(line2);
-                            geomGroup.Children.Add(line3);
-                            arrow.Data = geomGroup;
-
-                            Grid.SetColumn(arrow, sib.Column);
-                            Grid.SetRow(arrow, sib.Level - 2);
-                            Grid.SetRowSpan(arrow, 2);
-                            Grid.SetColumnSpan(arrow, sib.Size);
-                            Canvas.Children.Add(arrow);
-                        }
-
-                        {
-                            bool up = sib.Parent.Children.Last() == sib;
-                            Path arrow = new Path() { Stroke = Brushes.Black, StrokeThickness = 1, FlowDirection = FlowDirection.LeftToRight, VerticalAlignment = VerticalAlignment.Center, HorizontalAlignment =  HorizontalAlignment.Center };
-                            GeometryGroup geomGroup = new GeometryGroup();
-                            LineGeometry line1 = new LineGeometry() { StartPoint = new Point(4 + uniqeChild, up ? 5 : 15), EndPoint = new Point(0 + uniqeChild, up ? 0 : 20) };
-                            LineGeometry line2 = new LineGeometry() { StartPoint = new Point(0 + uniqeChild, 0), EndPoint = new Point(0 + uniqeChild, 20) };
-                            LineGeometry line3 = new LineGeometry() { StartPoint = new Point(-4 + uniqeChild, up ? 5 : 15), EndPoint = new Point(0 + uniqeChild, up ? 0 : 20) };
-                            geomGroup.Children.Add(line1);
-                            geomGroup.Children.Add(line2);
-                            geomGroup.Children.Add(line3);
-                            arrow.Data = geomGroup;
-
-                            Grid.SetColumn(arrow, sib.Column);
-                            Grid.SetRow(arrow, sib.Level - 2);
-                            Grid.SetRowSpan(arrow, 2);
-                            Grid.SetColumnSpan(arrow, sib.Size);
-                            Canvas.Children.Add(arrow);
-                        }
-                    }
-
-                    if (j != thisLevel.Count - 1)
-                    {
-                        if (thisLevel[j].Parent == thisLevel[j + 1].Parent)
-                        {
-                            Path arrow = new Path() { Stroke = Brushes.Black, StrokeThickness = 1, FlowDirection = FlowDirection.LeftToRight, VerticalAlignment = VerticalAlignment.Center, HorizontalAlignment = HorizontalAlignment.Center};
-                            GeometryGroup geomGroup = new GeometryGroup();
-                            LineGeometry line1 = new LineGeometry() { StartPoint = new Point(13, 7), EndPoint = new Point(20, 10) };
-                            LineGeometry line2 = new LineGeometry() { StartPoint = new Point(0, 10), EndPoint = new Point(20, 10) };
-                            LineGeometry line3 = new LineGeometry() { StartPoint = new Point(13, 13), EndPoint = new Point(20, 10) };
-                            geomGroup.Children.Add(line1);
-                            geomGroup.Children.Add(line2);
-                            geomGroup.Children.Add(line3);
-                            arrow.Data = geomGroup;
-
-                            Grid.SetRow(arrow, sib.Level - 1);
-                            Grid.SetColumn(arrow, sib.Column + sib.Size - 1);
-                            Grid.SetColumnSpan(arrow, 2);
-                            Grid.SetZIndex(arrow, 0);
-                            Canvas.Children.Add(arrow);
-                        }
-                    }
+                    pocGraph.AddEdge(new PocEdge(node.Source, node));
+                }
+                if (node.Parent != null && node == node.Parent.Children.Last())
+                {
+                    pocGraph.AddEdge(new PocEdge(node, node.Parent));
+                }
+                if (node.Parent != null && node == node.Parent.Children.First())
+                {
+                    pocGraph.AddEdge(new PocEdge(node.Parent, node));
+                }
+                if (node.Parent == null && node.Source == null)
+                {
+                    var tdi = new PocVertex() { NameOnScreen = "TDI" };
+                    pocGraph.AddVertex(tdi);
+                    pocGraph.AddEdge(new PocEdge(tdi, node));
+                }
+                if (node == exporter.AllNodes.Last(x=>x.Parent == null))
+                {
+                    var tdi = new PocVertex() { NameOnScreen = "TDO" };
+                    pocGraph.AddVertex(tdi);
+                    pocGraph.AddEdge(new PocEdge(node, tdi));
                 }
             }
-             * */
-        }
 
-        Dictionary<SIB, Border> allborders = new Dictionary<SIB, Border>();
+            graphLayout.LayoutAlgorithmType = "Tree";
+            var param = graphLayout.LayoutParameters as GraphSharp.Algorithms.Layout.Simple.Tree.SimpleTreeLayoutParameters;
+            param.Direction = GraphSharp.Algorithms.Layout.LayoutDirection.LeftToRight;
+            param.VertexGap = 40;
+            param.LayerGap = 40;
+            param.WidthPerHeight = 0.5;
+            graphLayout.Graph = pocGraph;
+
+            ComboSessions.Items.Clear();
+            foreach (var sess in exporter.Sessions_leng)
+            {
+                ComboSessions.Items.Add(sess.Item2.ToString());
+            }
+        }
 
         private void Paths_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            exporter.AllNodes.ForEach(x => x.Border = Brushes.Black);
+            if ((sender as ComboBox).SelectedIndex == -1)
+                return;
 
+            foreach (var node in exporter.Sessions_leng[(sender as ComboBox).SelectedIndex].Item1)
+            {
+                node.Border = Brushes.Red;
+            }
+                
         }
 
         private void Create_Click(object sender, RoutedEventArgs e)
