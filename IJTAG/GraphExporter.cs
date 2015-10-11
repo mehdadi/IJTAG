@@ -34,7 +34,7 @@ namespace IJTAG
         public Dictionary<Tuple<Node, Node>, MatrixCounter> MatrixOfTestability = new Dictionary<Tuple<Node, Node>, MatrixCounter>();
 
         public List<Queue<Node>> AllPaths = new List<Queue<Node>>();
-        public List<Tuple<Queue<Node>, UInt64>> Sessions_leng = new List<Tuple<Queue<Node>, UInt64>>();
+        public List<Tuple<Queue<Node>, UInt64, List<Tuple<Node, bool, int>>>> Sessions_leng = new List<Tuple<Queue<Node>, ulong, List<Tuple<Node, bool, int>>>>();
 
         public ulong LongestPath
         {
@@ -126,11 +126,39 @@ namespace IJTAG
             while (AllNodes.All(x => x.IsChecked) == false)
             {
                 Queue<Node> Path = new Queue<Node>();
-                UInt64 len = DynamicDigingPathFinder(TDIFirst, Path);
-                Sessions_leng.Add(new Tuple<Queue<Node>, ulong>(Path, len));
+                Dictionary<Node, bool> nodes_conf = new Dictionary<Node, bool>();
+                UInt64 len = DynamicDigingPathFinder(TDIFirst, Path, nodes_conf);
+                Sessions_leng.Add(new Tuple<Queue<Node>, ulong, List<Tuple<Node, bool, int>>>(Path, len, generateNodelyFaults(nodes_conf)));
             }
 
+
+
+
             MakeMatrix();
+
+            ResetApply();
+
+
+
+        }
+
+        private void ResetApply()
+        {
+            throw new NotImplementedException();
+        }
+
+        private List<Tuple<Node, bool, int>> generateNodelyFaults(Dictionary<Node, bool> path)
+        {
+            var list = new List<Tuple<Node, bool, int>>();
+
+            foreach (var p in path)
+            {
+                if (p.Value == false)
+                {
+
+                }
+            }
+            return list;
         }
 
         private void MakeMatrix()
@@ -188,16 +216,23 @@ namespace IJTAG
                 }
             }
 
-            foreach (var mat in MatrixOfTestability.Select(x => x.Key))
-            {
-                //if (mat.Item1 is TDR && mat.Item2 is TDR) // if 
-                {
-                    MatrixOfTestability[mat].Add();
-                }
-            }
+            /*
+             * dont want to explore all of it
+             * just the elements in foulty path
+             * 
+             * 
+             * */
+
+            //foreach (var mat in MatrixOfTestability.Select(x => x.Key))
+            //{
+            //    //if (mat.Item1 is TDR && mat.Item2 is TDR) // if 
+            //    {
+            //        MatrixOfTestability[mat].Add();
+            //    }
+            //}
         }
 
-        UInt64 DynamicDigingPathFinder(Node Node, Queue<Node> path)
+        UInt64 DynamicDigingPathFinder(Node Node, Queue<Node> path, Dictionary<Node, bool> Node_Isopen)
         {
             path.Enqueue(Node);
 
@@ -232,7 +267,9 @@ namespace IJTAG
                 next = Node.Children.First();
                 IsOpen = true;
             }
-            
+
+            Node_Isopen.Add(Node, IsOpen);
+
             if (Node is SIB)
             {
                 SIB sib = Node as SIB;
@@ -253,7 +290,7 @@ namespace IJTAG
             else if (Node is SCB)
             {
                 SCB scb = Node as SCB;
-                
+
                 if (scb.checkcounter[0] == 0 && scb.checkcounter[1] == 0) //going to the longest path first
                 {
                     scb.checkcounter[-(scb.ShorterIndex - 1)]++;
@@ -285,12 +322,12 @@ namespace IJTAG
 
             if (next != null)
             {
-                Len += DynamicDigingPathFinder(next, path);
+                Len += DynamicDigingPathFinder(next, path, Node_Isopen);
             }
 
             return Len;
         }
-        
+
         public void ParallelConstruction(IEnumerable<XElement> childs, Node parent)
         {
             //var childs = root.Elements();
