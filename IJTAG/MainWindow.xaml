@@ -68,14 +68,14 @@
         </Grid.RowDefinitions>
         <Menu Name="Mainmenu" Grid.Row="0" IsMainMenu="True">
             <MenuItem Header="File"  AllowDrop="True">
-                <MenuItem Header="Open" Click="Import_Click" />
+                <!--<MenuItem Header="Generate Config Sequences" Click="Import_Click" />-->
                 <MenuItem Header="Folder Parser" Click="MenuItem_Click" />
             </MenuItem>
             <Separator/>
         </Menu>
         <TabControl Grid.Row="1">
             <TabItem Header="Graph View" >
-                <Grid>
+                <Grid >
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
@@ -84,7 +84,7 @@
                         <TextBlock Text="Session" />
                         <ComboBox Name="ComboSessions" Width="65" SelectionChanged="Paths_SelectionChanged"/>
                     </StackPanel>
-                    <Grid Name="GeneralGrid" Grid.Row="1">
+                    <Grid Name="GeneralGrid" Grid.Row="1" AllowDrop="True" Drop="GeneralGrid_Drop">
 
                     </Grid>
                 </Grid>
@@ -111,6 +111,14 @@
                     </UniformGrid>
                 </Grid>
                 
+            </TabItem>
+            <TabItem Header="Version Updater" AllowDrop="True">
+                <Grid Drop="TextBlock_Drop">
+                    <TextBlock Name="DropTest" Text="Drag and drop a folder Here" FontSize="36" />
+                    <!--<Grid.RowDefinitions>
+                        
+                    </Grid.RowDefinitions>-->
+                </Grid>
             </TabItem>
         </TabControl>
     </Grid>
