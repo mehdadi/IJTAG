@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Gateway Version="2">
+  <SIB ID="2">
+    <TDR ID="2.t" SCLength="915" />
+  </SIB>
+  <SIB ID="3">
+    <TDR ID="3.t" SCLength="9669" />
+  </SIB>
+  <SIB ID="4">
+    <TDR ID="4.t" SCLength="62" />
+  </SIB>
+  <SIB ID="5">
+    <TDR ID="5.t" SCLength="63" />
+  </SIB>
+  <SIB ID="6">
+    <TDR ID="6.t" SCLength="87" />
+  </SIB>
+  <SIB ID="7">
+    <TDR ID="7.t" SCLength="19" />
+  </SIB>
+  <SIB ID="8">
+    <TDR ID="8.t" SCLength="17" />
+  </SIB>
+  <SIB ID="9">
+    <TDR ID="9.t" SCLength="63" />
+  </SIB>
+  <SIB ID="10">
+    <TDR ID="10.t" SCLength="74" />
+  </SIB>
+  <SIB ID="11">
+    <TDR ID="11.t" SCLength="5219" />
+  </SIB>
+  <SIB ID="12">
+    <TDR ID="12.t" SCLength="31" />
+  </SIB>
+  <SIB ID="13">
+    <TDR ID="13.t" SCLength="11" />
+  </SIB>
+  <SIB ID="14">
+    <TDR ID="14.t" SCLength="28" />
+  </SIB>
+  <SIB ID="15">
+    <TDR ID="15.t" SCLength="19" />
+  </SIB>
+  <SIB ID="16">
+    <TDR ID="16.t" SCLength="30" />
+  </SIB>
+  <SIB ID="17">
+    <TDR ID="17.t" SCLength="14" />
+  </SIB>
+  <SIB ID="18">
+    <TDR ID="18.t" SCLength="19" />
+  </SIB>
+  <SIB ID="19">
+    <TDR ID="19.t" SCLength="7029" />
+  </SIB>
+  <SIB ID="20">
+    <TDR ID="20.t" SCLength="87" />
+  </SIB>
+</Gateway>

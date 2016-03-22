@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!-- Source scan-chain file: C:\Users\Farrokh\Documents\Socware\Thesis\Other\Test Time Calculation\ITC Experiments\ITC'02 Benchmarks\Extracted Modules\t512505_modules.xml -->
+<!-- No Top Level -->
+<Gateway SCLength="0" SCPatterns="0">
+  <!-- <SIB ID="1" SCLengthOld="5206" SCLength="0" SCPatterns="0" InstrumentID="0"  /> -->
+  <SIB ID="2" SCLength="746" SCPatterns="157" InstrumentID="1" BIST="0" />
+  <SIB ID="3" SCLength="392" SCPatterns="330" InstrumentID="2" BIST="0" />
+  <SIB ID="4" SCLength="1003" SCPatterns="154" InstrumentID="3" BIST="0" />
+  <SIB ID="5" SCLength="946" SCPatterns="408" InstrumentID="4" BIST="0" />
+  <SIB ID="6" SCLength="25" SCPatterns="3" InstrumentID="5" BIST="0" />
+  <SIB ID="7" SCLength="204" SCPatterns="127" InstrumentID="6" BIST="0" />
+  <SIB ID="8" SCLength="672" SCPatterns="608" InstrumentID="7" BIST="0" />
+  <SIB ID="9" SCLength="4671" SCPatterns="1025" InstrumentID="8" BIST="0" />
+  <SIB ID="10" SCLength="734" SCPatterns="195" InstrumentID="9" BIST="0" />
+  <SIB ID="11" SCLength="8304" SCPatterns="788" InstrumentID="10" BIST="0" />
+  <SIB ID="12" SCLength="639" SCPatterns="188" InstrumentID="11" BIST="0" />
+  <SIB ID="13" SCLength="173" SCPatterns="42" InstrumentID="12" BIST="0" />
+  <SIB ID="14" SCLength="187" SCPatterns="68" InstrumentID="13" BIST="0" />
+  <SIB ID="15" SCLength="2357" SCPatterns="278" InstrumentID="14" BIST="0" />
+  <SIB ID="16" SCLength="924" SCPatterns="151" InstrumentID="15" BIST="0" />
+  <SIB ID="17" SCLength="1901" SCPatterns="370" InstrumentID="16" BIST="0" />
+  <SIB ID="18" SCLength="568" SCPatterns="80" InstrumentID="17" BIST="0" />
+  <SIB ID="19" SCLength="123" SCPatterns="153" InstrumentID="18" BIST="0" />
+  <SIB ID="20" SCLength="118" SCPatterns="79" InstrumentID="19" BIST="0" />
+  <SIB ID="21" SCLength="118" SCPatterns="77" InstrumentID="20" BIST="0" />
+  <SIB ID="22" SCLength="582" SCPatterns="242" InstrumentID="21" BIST="0" />
+  <SIB ID="23" SCLength="582" SCPatterns="233" InstrumentID="22" BIST="0" />
+  <SIB ID="24" SCLength="2966" SCPatterns="532" InstrumentID="23" BIST="0" />
+  <SIB ID="25" SCLength="1980" SCPatterns="429" InstrumentID="24" BIST="0" />
+  <SIB ID="26" SCLength="678" SCPatterns="148" InstrumentID="25" BIST="0" />
+  <SIB ID="27" SCLength="216" SCPatterns="13" InstrumentID="26" BIST="0" />
+  <SIB ID="28" SCLength="99" SCPatterns="10" InstrumentID="27" BIST="0" />
+  <SIB ID="29" SCLength="7" SCPatterns="3" InstrumentID="28" BIST="0" />
+  <SIB ID="30" SCLength="307" SCPatterns="67" InstrumentID="29" BIST="0" />
+  <SIB ID="31" SCLength="410" SCPatterns="151" InstrumentID="30" BIST="0" />
+  <SIB ID="32" SCLength="43922" SCPatterns="3370" InstrumentID="31" BIST="0" />
+</Gateway>

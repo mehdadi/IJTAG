@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Gateway>
+  <SIB ID="5">
+    <TDR ID="5.1" SCLength="17" />
+    <SCB ID="4" SCLengthA="8" SCLengthB="2" />
+
+    <SIB ID="3" SCLength="5">
+      <TDR ID="3.1" SCLength="5" />
+    </SIB>
+    
+  </SIB>
+  
+  <SCB ID="2" SCLengthA="14" SCLengthB="19" />
+  <SCB ID="1" SCLengthA="5" SCLengthB="1" />
+  <SIB ID="0" >
+    <TDR ID="0.1" SCLength="19" />
+  </SIB>
+</Gateway>

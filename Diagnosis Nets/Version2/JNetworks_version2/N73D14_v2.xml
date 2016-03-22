@@ -1,0 +1,134 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Gateway Version="2">
+  <SIB ID="72">
+    <TDR ID="72.t" SCLength="1824" />
+    <TDR ID="71" SCLength="728" />
+    <TDR ID="70" SCLength="2629" />
+    <SIB ID="69">
+      <TDR ID="69.t" SCLength="3458" />
+      <SIB ID="68">
+        <TDR ID="68.t" SCLength="1987" />
+        <TDR ID="67" SCLength="3780" />
+      </SIB>
+      <SIB ID="66">
+        <TDR ID="66.t" SCLength="4195" />
+      </SIB>
+    </SIB>
+  </SIB>
+  <SCB ID="65" SCLengthA="3358" SCLengthB="3567" />
+  <TDR ID="64" SCLength="2761" />
+  <TDR ID="63" SCLength="2725" />
+  <SCB ID="62" SCLengthA="4339" SCLengthB="896" />
+  <SCB ID="61" SCLengthA="4034" SCLengthB="408" />
+  <TDR ID="60" SCLength="2304" />
+  <TDR ID="59" SCLength="884" />
+  <SIB ID="58">
+    <TDR ID="58.t" SCLength="753" />
+    <SIB ID="57">
+      <TDR ID="57.t" SCLength="155" />
+    </SIB>
+    <SCB ID="56" SCLengthA="3072" SCLengthB="2015" />
+  </SIB>
+  <SIB ID="55">
+    <TDR ID="55.t" SCLength="3235" />
+    <SIB ID="54">
+      <TDR ID="54.t" SCLength="3693" />
+      <TDR ID="53" SCLength="1870" />
+      <SIB ID="52">
+        <TDR ID="52.t" SCLength="4368" />
+        <TDR ID="51" SCLength="173" />
+        <SIB ID="50">
+          <TDR ID="50.t" SCLength="2241" />
+          <SIB ID="49">
+            <TDR ID="49.t" SCLength="1181" />
+            <TDR ID="48" SCLength="4439" />
+            <SCB ID="47" SCLengthA="478" SCLengthB="2834" />
+            <TDR ID="46" SCLength="617" />
+          </SIB>
+          <SIB ID="45">
+            <TDR ID="45.t" SCLength="2707" />
+            <SIB ID="44">
+              <TDR ID="44.t" SCLength="3860" />
+              <SIB ID="43">
+                <TDR ID="43.t" SCLength="2565" />
+                <SIB ID="42">
+                  <TDR ID="42.t" SCLength="3404" />
+                  <TDR ID="41" SCLength="3543" />
+                  <SIB ID="40">
+                    <TDR ID="40.t" SCLength="2181" />
+                    <SIB ID="39">
+                      <TDR ID="39.t" SCLength="2701" />
+                      <SIB ID="38">
+                        <TDR ID="38.t" SCLength="891" />
+                        <SCB ID="37" SCLengthA="3230" SCLengthB="1862" />
+                        <SCB ID="36" SCLengthA="3377" SCLengthB="3390" />
+                        <TDR ID="35" SCLength="279" />
+                      </SIB>
+                    </SIB>
+                  </SIB>
+                </SIB>
+              </SIB>
+              <SIB ID="34">
+                <TDR ID="34.t" SCLength="3394" />
+                <SCB ID="33" SCLengthA="2710" SCLengthB="4474" />
+              </SIB>
+            </SIB>
+          </SIB>
+        </SIB>
+      </SIB>
+      <SCB ID="32" SCLengthA="4282" SCLengthB="2576" />
+      <TDR ID="31" SCLength="351" />
+    </SIB>
+  </SIB>
+  <SIB ID="30">
+    <TDR ID="30.t" SCLength="1626" />
+    <SIB ID="29">
+      <TDR ID="29.t" SCLength="1644" />
+    </SIB>
+  </SIB>
+  <SIB ID="28">
+    <TDR ID="28.t" SCLength="2680" />
+    <SCB ID="27" SCLengthA="910" SCLengthB="3337" />
+  </SIB>
+  <TDR ID="26" SCLength="2817" />
+  <SCB ID="25" SCLengthA="2099" SCLengthB="448" />
+  <SCB ID="24" SCLengthA="2049" SCLengthB="1400" />
+  <TDR ID="23" SCLength="1884" />
+  <TDR ID="22" SCLength="438" />
+  <SCB ID="21" SCLengthA="3152" SCLengthB="2202" />
+  <SIB ID="20">
+    <TDR ID="20.t" SCLength="2963" />
+    <SCB ID="19" SCLengthA="560" SCLengthB="2646" />
+    <SIB ID="18">
+      <TDR ID="18.t" SCLength="212" />
+      <TDR ID="17" SCLength="2944" />
+      <TDR ID="16" SCLength="2227" />
+      <SIB ID="15">
+        <TDR ID="15.t" SCLength="4215" />
+        <TDR ID="14" SCLength="4259" />
+      </SIB>
+      <SCB ID="13" SCLengthA="3585" SCLengthB="3180" />
+    </SIB>
+    <SIB ID="12">
+      <TDR ID="12.t" SCLength="3984" />
+      <TDR ID="11" SCLength="2977" />
+      <TDR ID="10" SCLength="621" />
+      <TDR ID="9" SCLength="2876" />
+    </SIB>
+  </SIB>
+  <TDR ID="8" SCLength="4064" />
+  <SIB ID="7">
+    <TDR ID="7.t" SCLength="2679" />
+  </SIB>
+  <TDR ID="6" SCLength="3519" />
+  <SCB ID="5" SCLengthA="3510" SCLengthB="754" />
+  <SIB ID="4">
+    <TDR ID="4.t" SCLength="690" />
+  </SIB>
+  <TDR ID="3" SCLength="815" />
+  <SCB ID="2" SCLengthA="1209" SCLengthB="4377" />
+  <TDR ID="1" SCLength="2830" />
+  <SIB ID="0">
+    <TDR ID="0.t" SCLength="3663" />
+  </SIB>
+</Gateway>

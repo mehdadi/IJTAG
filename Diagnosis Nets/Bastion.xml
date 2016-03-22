@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<Gateway Version="3">
+  <TDR ID="1.20" SCLength="20" />
+  <SIB ID="1">
+    <TDR ID="1.11" SCLength="11" />
+  </SIB>
+  <SIB ID="2" >
+    <TDR ID="2.12" SCLength="12" />
+  </SIB>
+  <SIB ID="3">
+    <SCB ID="M1" ChildNodes="2" SCLengths="0,13" />
+    <SCB ID="M2" ChildNodes="2" SCLengths="0,14"/>
+    <TDR ID="3.2ind" SCLength="2" />
+  </SIB>
+
+  <SIB ID="4">
+    <SCB ID="M3" ChildNodes="4" SCLengths="0,16,17,18" />
+    <TDR ID="9" SCLength="2" />
+  </SIB>
+  
+</Gateway>

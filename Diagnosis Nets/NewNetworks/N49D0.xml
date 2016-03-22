@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Gateway>
+  <TDR ID="48" SCLength="28" />
+  <SIB ID="47" SCLength="6" />
+  <SCB ID="46" SCLengthA="3" SCLengthB="10" />
+  <TDR ID="45" SCLength="21" />
+  <SCB ID="44" SCLengthA="18" SCLengthB="28" />
+  <SIB ID="43" SCLength="28" />
+  <TDR ID="42" SCLength="10" />
+  <SIB ID="41" SCLength="12" />
+  <TDR ID="40" SCLength="9" />
+  <SCB ID="39" SCLengthA="22" SCLengthB="9" />
+  <SCB ID="38" SCLengthA="3" SCLengthB="9" />
+  <SCB ID="37" SCLengthA="10" SCLengthB="23" />
+  <SCB ID="36" SCLengthA="7" SCLengthB="16" />
+  <SCB ID="35" SCLengthA="17" SCLengthB="29" />
+  <TDR ID="34" SCLength="25" />
+  <SIB ID="33" SCLength="20" />
+  <SCB ID="32" SCLengthA="15" SCLengthB="26" />
+  <SCB ID="31" SCLengthA="2" SCLengthB="29" />
+  <TDR ID="30" SCLength="27" />
+  <SIB ID="29" SCLength="4" />
+  <SIB ID="28" SCLength="17" />
+  <SIB ID="27" SCLength="31" />
+  <SCB ID="26" SCLengthA="18" SCLengthB="27" />
+  <TDR ID="25" SCLength="4" />
+  <SIB ID="24" SCLength="20" />
+  <SIB ID="23" SCLength="31" />
+  <SCB ID="22" SCLengthA="22" SCLengthB="16" />
+  <SIB ID="21" SCLength="4" />
+  <TDR ID="20" SCLength="30" />
+  <SIB ID="19" SCLength="16" />
+  <SIB ID="18" SCLength="24" />
+  <TDR ID="17" SCLength="25" />
+  <SIB ID="16" SCLength="31" />
+  <SIB ID="15" SCLength="1" />
+  <TDR ID="14" SCLength="13" />
+  <TDR ID="13" SCLength="7" />
+  <TDR ID="12" SCLength="14" />
+  <SCB ID="11" SCLengthA="17" SCLengthB="31" />
+  <SCB ID="10" SCLengthA="3" SCLengthB="25" />
+  <SCB ID="9" SCLengthA="6" SCLengthB="31" />
+  <TDR ID="8" SCLength="16" />
+  <SCB ID="7" SCLengthA="1" SCLengthB="17" />
+  <SCB ID="6" SCLengthA="18" SCLengthB="9" />
+  <SIB ID="5" SCLength="2" />
+  <TDR ID="4" SCLength="16" />
+  <TDR ID="3" SCLength="14" />
+  <SIB ID="2" SCLength="16" />
+  <SCB ID="1" SCLengthA="12" SCLengthB="3" />
+  <SCB ID="0" SCLengthA="8" SCLengthB="18" />
+</Gateway>

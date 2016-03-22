@@ -1,0 +1,10 @@
+----------
+TDI -> TDR 1.20 -> SIB 1 -> TDR 1.11 -> SIB 2 -> TDR 2.12 -> SIB 3 -> SCB M1 -> SCB M2 -> TDR 3.2ind -> SIB 4 -> SCB M3 -> TDR 9 -> TDO   Len: 96
+----------
+TDI -> TDR 1.20 -> SIB 1 -> SIB 2 -> SIB 3 -> SCB M1 -> SCB M2 -> TDR 3.2ind -> SIB 4 -> SCB M3 -> TDR 9 -> TDO   Len: 45
+----------
+TDI -> TDR 1.20 -> SIB 1 -> SIB 2 -> SIB 3 -> SIB 4 -> SCB M3 -> TDR 9 -> TDO   Len: 42
+----------
+TDI -> TDR 1.20 -> SIB 1 -> SIB 2 -> SIB 3 -> SIB 4 -> SCB M3 -> TDR 9 -> TDO   Len: 26
+----------
+TDI -> TDR 1.20 -> SIB 1 -> SIB 2 -> SIB 3 -> SIB 4 -> TDO   Len: 24

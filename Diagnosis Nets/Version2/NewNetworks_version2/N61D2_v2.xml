@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Gateway Version="2">
+  <TDR ID="60" SCLength="6" />
+  <TDR ID="59" SCLength="30" />
+  <SIB ID="58">
+    <TDR ID="58.t" SCLength="21" />
+  </SIB>
+  <TDR ID="57" SCLength="13" />
+  <TDR ID="56" SCLength="24" />
+  <TDR ID="55" SCLength="8" />
+  <SCB ID="54" SCLengthA="1" SCLengthB="24" />
+  <SIB ID="53">
+    <TDR ID="53.t" SCLength="13" />
+  </SIB>
+  <TDR ID="52" SCLength="9" />
+  <TDR ID="51" SCLength="29" />
+  <SCB ID="50" SCLengthA="15" SCLengthB="26" />
+  <TDR ID="49" SCLength="8" />
+  <TDR ID="48" SCLength="14" />
+  <TDR ID="47" SCLength="17" />
+  <SCB ID="46" SCLengthA="27" SCLengthB="3" />
+  <SCB ID="45" SCLengthA="23" SCLengthB="29" />
+  <SCB ID="44" SCLengthA="26" SCLengthB="20" />
+  <SCB ID="43" SCLengthA="23" SCLengthB="15" />
+  <TDR ID="42" SCLength="22" />
+  <TDR ID="41" SCLength="30" />
+  <SCB ID="40" SCLengthA="21" SCLengthB="28" />
+  <TDR ID="39" SCLength="5" />
+  <TDR ID="38" SCLength="29" />
+  <SCB ID="37" SCLengthA="8" SCLengthB="27" />
+  <TDR ID="36" SCLength="16" />
+  <SIB ID="35">
+    <TDR ID="35.t" SCLength="28" />
+  </SIB>
+  <SCB ID="34" SCLengthA="5" SCLengthB="8" />
+  <TDR ID="33" SCLength="12" />
+  <TDR ID="32" SCLength="7" />
+  <SIB ID="31">
+    <TDR ID="31.t" SCLength="4" />
+    <TDR ID="30" SCLength="24" />
+  </SIB>
+  <SCB ID="29" SCLengthA="14" SCLengthB="10" />
+  <SCB ID="28" SCLengthA="14" SCLengthB="21" />
+  <TDR ID="27" SCLength="24" />
+  <TDR ID="26" SCLength="25" />
+  <TDR ID="25" SCLength="14" />
+  <SCB ID="24" SCLengthA="8" SCLengthB="18" />
+  <SCB ID="23" SCLengthA="14" SCLengthB="9" />
+  <SCB ID="22" SCLengthA="23" SCLengthB="27" />
+  <SCB ID="21" SCLengthA="11" SCLengthB="5" />
+  <SIB ID="20">
+    <TDR ID="20.t" SCLength="1" />
+    <TDR ID="19" SCLength="20" />
+    <SCB ID="18" SCLengthA="24" SCLengthB="19" />
+  </SIB>
+  <SCB ID="17" SCLengthA="25" SCLengthB="18" />
+  <SCB ID="16" SCLengthA="3" SCLengthB="13" />
+  <TDR ID="15" SCLength="10" />
+  <TDR ID="14" SCLength="11" />
+  <SCB ID="13" SCLengthA="7" SCLengthB="14" />
+  <TDR ID="12" SCLength="20" />
+  <SIB ID="11">
+    <TDR ID="11.t" SCLength="21" />
+    <TDR ID="10" SCLength="1" />
+    <SIB ID="9">
+      <TDR ID="9.t" SCLength="4" />
+    </SIB>
+    <TDR ID="8" SCLength="11" />
+    <SIB ID="7">
+      <TDR ID="7.t" SCLength="24" />
+      <TDR ID="6" SCLength="26" />
+    </SIB>
+  </SIB>
+  <SCB ID="5" SCLengthA="10" SCLengthB="22" />
+  <SIB ID="4">
+    <TDR ID="4.t" SCLength="13" />
+    <TDR ID="3" SCLength="11" />
+    <SIB ID="2">
+      <TDR ID="2.t" SCLength="27" />
+      <SCB ID="1" SCLengthA="30" SCLengthB="15" />
+    </SIB>
+  </SIB>
+  <SIB ID="0">
+    <TDR ID="0.t" SCLength="19" />
+  </SIB>
+</Gateway>

@@ -1,0 +1,125 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Gateway>
+  <SCB ID="99" SCLengthA="6" SCLengthB="6" />
+  <SIB ID="98" SCLength="22">
+    <SIB ID="97" SCLength="21">
+      <TDR ID="96" SCLength="4" />
+      <TDR ID="95" SCLength="16" />
+      <TDR ID="94" SCLength="5" />
+    </SIB>
+    <SCB ID="93" SCLengthA="9" SCLengthB="15" />
+  </SIB>
+  <SIB ID="92" SCLength="19">
+    <TDR ID="91" SCLength="11" />
+    <SIB ID="90" SCLength="18" />
+  </SIB>
+  <SCB ID="89" SCLengthA="20" SCLengthB="14" />
+  <SCB ID="88" SCLengthA="19" SCLengthB="9" />
+  <SCB ID="87" SCLengthA="15" SCLengthB="21" />
+  <SCB ID="86" SCLengthA="9" SCLengthB="20" />
+  <TDR ID="85" SCLength="27" />
+  <SCB ID="84" SCLengthA="25" SCLengthB="19" />
+  <TDR ID="83" SCLength="28" />
+  <SIB ID="82" SCLength="11">
+    <SIB ID="81" SCLength="1">
+      <TDR ID="80" SCLength="13" />
+    </SIB>
+    <SIB ID="79" SCLength="5">
+      <SCB ID="78" SCLengthA="6" SCLengthB="28" />
+      <TDR ID="77" SCLength="14" />
+    </SIB>
+  </SIB>
+  <SCB ID="76" SCLengthA="9" SCLengthB="19" />
+  <TDR ID="75" SCLength="28" />
+  <TDR ID="74" SCLength="4" />
+  <TDR ID="73" SCLength="22" />
+  <TDR ID="72" SCLength="1" />
+  <SCB ID="71" SCLengthA="21" SCLengthB="1" />
+  <SCB ID="70" SCLengthA="25" SCLengthB="10" />
+  <TDR ID="69" SCLength="1" />
+  <SIB ID="68" SCLength="28">
+    <SCB ID="67" SCLengthA="19" SCLengthB="22" />
+  </SIB>
+  <TDR ID="66" SCLength="10" />
+  <SCB ID="65" SCLengthA="27" SCLengthB="14" />
+  <SIB ID="64" SCLength="29">
+    <SIB ID="63" SCLength="2">
+      <TDR ID="62" SCLength="5" />
+    </SIB>
+    <SCB ID="61" SCLengthA="12" SCLengthB="5" />
+  </SIB>
+  <TDR ID="60" SCLength="8" />
+  <SCB ID="59" SCLengthA="8" SCLengthB="3" />
+  <TDR ID="58" SCLength="30" />
+  <TDR ID="57" SCLength="14" />
+  <SIB ID="56" SCLength="6">
+    <SIB ID="55" SCLength="31">
+      <SCB ID="54" SCLengthA="26" SCLengthB="16" />
+      <SIB ID="53" SCLength="26" />
+      <SCB ID="52" SCLengthA="24" SCLengthB="29" />
+    </SIB>
+    <SIB ID="51" SCLength="19">
+      <SCB ID="50" SCLengthA="8" SCLengthB="20" />
+      <SIB ID="49" SCLength="5" />
+      <SIB ID="48" SCLength="28" />
+    </SIB>
+  </SIB>
+  <SCB ID="47" SCLengthA="15" SCLengthB="14" />
+  <SIB ID="46" SCLength="18">
+    <SCB ID="45" SCLengthA="21" SCLengthB="15" />
+    <TDR ID="44" SCLength="18" />
+  </SIB>
+  <SIB ID="43" SCLength="20">
+    <SIB ID="42" SCLength="10">
+      <SCB ID="41" SCLengthA="22" SCLengthB="26" />
+      <SIB ID="40" SCLength="29" />
+      <TDR ID="39" SCLength="22" />
+    </SIB>
+  </SIB>
+  <SCB ID="38" SCLengthA="19" SCLengthB="17" />
+  <TDR ID="37" SCLength="3" />
+  <SIB ID="36" SCLength="17">
+    <TDR ID="35" SCLength="6" />
+    <TDR ID="34" SCLength="5" />
+  </SIB>
+  <TDR ID="33" SCLength="22" />
+  <TDR ID="32" SCLength="11" />
+  <TDR ID="31" SCLength="27" />
+  <TDR ID="30" SCLength="23" />
+  <SIB ID="29" SCLength="12">
+    <SCB ID="28" SCLengthA="22" SCLengthB="4" />
+  </SIB>
+  <SCB ID="27" SCLengthA="27" SCLengthB="31" />
+  <SIB ID="26" SCLength="7">
+    <SCB ID="25" SCLengthA="1" SCLengthB="14" />
+  </SIB>
+  <SIB ID="24" SCLength="24">
+    <SCB ID="23" SCLengthA="14" SCLengthB="30" />
+  </SIB>
+  <SCB ID="22" SCLengthA="24" SCLengthB="25" />
+  <SIB ID="21" SCLength="9" />
+  <SIB ID="20" SCLength="16">
+    <SIB ID="19" SCLength="10" />
+    <SIB ID="18" SCLength="20">
+      <TDR ID="17" SCLength="20" />
+    </SIB>
+  </SIB>
+  <SIB ID="16" SCLength="29" />
+  <SCB ID="15" SCLengthA="22" SCLengthB="5" />
+  <SIB ID="14" SCLength="10" />
+  <SCB ID="13" SCLengthA="24" SCLengthB="27" />
+  <TDR ID="12" SCLength="22" />
+  <SIB ID="11" SCLength="29">
+    <SCB ID="10" SCLengthA="15" SCLengthB="24" />
+    <SCB ID="9" SCLengthA="12" SCLengthB="27" />
+  </SIB>
+  <SCB ID="8" SCLengthA="19" SCLengthB="30" />
+  <SCB ID="7" SCLengthA="11" SCLengthB="2" />
+  <TDR ID="6" SCLength="5" />
+  <SCB ID="5" SCLengthA="26" SCLengthB="24" />
+  <TDR ID="4" SCLength="4" />
+  <TDR ID="3" SCLength="4" />
+  <SCB ID="2" SCLengthA="24" SCLengthB="12" />
+  <SCB ID="1" SCLengthA="8" SCLengthB="14" />
+  <SCB ID="0" SCLengthA="5" SCLengthB="30" />
+</Gateway>

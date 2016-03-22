@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Gateway Version="2">
+  <SIB ID="2">
+    <TDR ID="2.t" SCLength="8875" />
+  </SIB>
+  <SIB ID="3">
+    <TDR ID="3.t" SCLength="5326" />
+  </SIB>
+  <SIB ID="4">
+    <TDR ID="4.t" SCLength="502" />
+  </SIB>
+  <SIB ID="5">
+    <TDR ID="5.t" SCLength="502" />
+  </SIB>
+</Gateway>

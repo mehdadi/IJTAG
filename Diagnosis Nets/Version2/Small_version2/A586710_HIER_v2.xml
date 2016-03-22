@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Gateway Version="2">
+  <SIB ID="9">
+    <TDR ID="9.t" SCLength="19717" />
+  </SIB>
+  <SIB ID="10">
+    <TDR ID="10.t" SCLength="0" />
+    <SIB ID="5">
+      <TDR ID="5.t" SCLength="530" />
+    </SIB>
+  </SIB>
+  <SIB ID="6">
+    <TDR ID="6.t" SCLength="21324" />
+  </SIB>
+  <SIB ID="7">
+    <TDR ID="7.t" SCLength="69" />
+  </SIB>
+  <SIB ID="8">
+    <TDR ID="8.t" SCLength="326" />
+  </SIB>
+</Gateway>

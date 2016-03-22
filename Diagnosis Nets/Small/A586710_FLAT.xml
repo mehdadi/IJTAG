@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!-- Source scan-chain file: C:\Users\Farrokh\Documents\Socware\Thesis\Other\Test Time Calculation\ITC Experiments\ITC'02 Benchmarks\Extracted Modules\a586710_modules.xml -->
+<!-- No Top Level -->
+<Gateway SCLength="0" SCPatterns="0">
+  <!-- <SIB ID="1" SCLengthOld="1771" SCLength="0" SCPatterns="0" InstrumentID="0" /> -->
+  <SIB ID="2" SCLength="19717" SCPatterns="2945" InstrumentID="1" BIST="0" />
+  <SIB ID="5" SCLength="530" SCPatterns="181140" InstrumentID="4" BIST="0" />
+  <SIB ID="6" SCLength="21324" SCPatterns="2945" InstrumentID="5" BIST="0" />
+  <SIB ID="7" SCLength="69" SCPatterns="40431" InstrumentID="6" BIST="0" />
+  <SIB ID="8" SCLength="326" SCPatterns="1914433" InstrumentID="7" BIST="0" />
+</Gateway>

@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Gateway Version="2">
+  <SIB ID="2">
+    <TDR ID="2.t" SCLength="746" />
+  </SIB>
+  <SIB ID="3">
+    <TDR ID="3.t" SCLength="392" />
+  </SIB>
+  <SIB ID="4">
+    <TDR ID="4.t" SCLength="1003" />
+  </SIB>
+  <SIB ID="5">
+    <TDR ID="5.t" SCLength="946" />
+  </SIB>
+  <SIB ID="6">
+    <TDR ID="6.t" SCLength="25" />
+  </SIB>
+  <SIB ID="7">
+    <TDR ID="7.t" SCLength="204" />
+  </SIB>
+  <SIB ID="8">
+    <TDR ID="8.t" SCLength="672" />
+  </SIB>
+  <SIB ID="9">
+    <TDR ID="9.t" SCLength="4671" />
+  </SIB>
+  <SIB ID="10">
+    <TDR ID="10.t" SCLength="734" />
+  </SIB>
+  <SIB ID="11">
+    <TDR ID="11.t" SCLength="8304" />
+  </SIB>
+  <SIB ID="12">
+    <TDR ID="12.t" SCLength="639" />
+  </SIB>
+  <SIB ID="13">
+    <TDR ID="13.t" SCLength="173" />
+  </SIB>
+  <SIB ID="14">
+    <TDR ID="14.t" SCLength="187" />
+  </SIB>
+  <SIB ID="15">
+    <TDR ID="15.t" SCLength="2357" />
+  </SIB>
+  <SIB ID="16">
+    <TDR ID="16.t" SCLength="924" />
+  </SIB>
+  <SIB ID="17">
+    <TDR ID="17.t" SCLength="1901" />
+  </SIB>
+  <SIB ID="18">
+    <TDR ID="18.t" SCLength="568" />
+  </SIB>
+  <SIB ID="19">
+    <TDR ID="19.t" SCLength="123" />
+  </SIB>
+  <SIB ID="20">
+    <TDR ID="20.t" SCLength="118" />
+  </SIB>
+  <SIB ID="21">
+    <TDR ID="21.t" SCLength="118" />
+  </SIB>
+  <SIB ID="22">
+    <TDR ID="22.t" SCLength="582" />
+  </SIB>
+  <SIB ID="23">
+    <TDR ID="23.t" SCLength="582" />
+  </SIB>
+  <SIB ID="24">
+    <TDR ID="24.t" SCLength="2966" />
+  </SIB>
+  <SIB ID="25">
+    <TDR ID="25.t" SCLength="1980" />
+  </SIB>
+  <SIB ID="26">
+    <TDR ID="26.t" SCLength="678" />
+  </SIB>
+  <SIB ID="27">
+    <TDR ID="27.t" SCLength="216" />
+  </SIB>
+  <SIB ID="28">
+    <TDR ID="28.t" SCLength="99" />
+  </SIB>
+  <SIB ID="29">
+    <TDR ID="29.t" SCLength="7" />
+  </SIB>
+  <SIB ID="30">
+    <TDR ID="30.t" SCLength="307" />
+  </SIB>
+  <SIB ID="31">
+    <TDR ID="31.t" SCLength="410" />
+  </SIB>
+  <SIB ID="32">
+    <TDR ID="32.t" SCLength="43922" />
+  </SIB>
+</Gateway>
