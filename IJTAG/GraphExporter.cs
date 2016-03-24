@@ -215,13 +215,13 @@ namespace IJTAG
             {
                 Session Path = new Session();
                 Dictionary<Node, bool> nodes_conf = new Dictionary<Node, bool>();
-                Path.SessionLenght = DynamicDigingPathFinder(TDIFirst, Path);
+                Path.SessionLenght = DynamiHolowingPathFinder(TDIFirst, Path);
                 Sessions.Add(Path);
             }
 
             MakeMatrix();
 
-            return;
+            //return;
             // On DIAGNOSIS RUN
             AllNodes.OfType<SIB>().AsParallel().ForAll(x => x.Status = NodeStatusindex.OpenF);
             AllNodes.OfType<SCB>().AsParallel().ForAll(x => x.MultiplexSelect = 0);
@@ -327,7 +327,188 @@ namespace IJTAG
                     }
                 }
             }
+
+            //var Controls = MatrixOfTestabilityMulties.Where(x => x.Key.Item1 is SIB && x.Key.Item2 is SIB).Where(x => x.Value.Count == 0 && NonTestables.Contains(x.Key) == false);
+            var sibPairs = NonTestables.Where(X => (X.Item1 is TDR) == false && (X.Item2 is TDR) == false).ToList();
+           // if (false)
+            
+            foreach (var key in sibPairs)
+            {
+                //var alfa = key.Item1 as SIB;
+                //var beta = key.Item2 as SIB;
+                if (key.Item1.Parent == key.Item2.Parent)
+                {
+                    //var situation_session = situationSession(alfa, beta, 1);
+
+                    if (true)// || situation_session.Count() == 0)
+                    {
+                        // we should add 2
+                        Session n1 = new Session();//with alfa children ,beta close, alfa scb1 , beta scb0
+                        Session n2 = new Session();//with beta children ,alfa close, beta scb1, alfa scb0
+                        Session shortestsessionbothopen = situationSession(key.Item1, key.Item2).OrderBy(x => x.SessionLenght).FirstOrDefault();
+                        foreach (Node nd in shortestsessionbothopen)
+                        {
+                            if (key.Item1 == nd.Parent)
+                            {
+                                n1.Enqueue(nd);
+                                n1.SessionLenght += nd.NodeLenght;
+                            }
+                            else if (key.Item2 == nd.Parent)
+                            {
+                                n2.Enqueue(nd);
+                                n2.SessionLenght += nd.NodeLenght;
+                            }
+                            else
+                            {
+                                if (nd == key.Item1)
+                                {
+                                    if (nd is SIB)
+                                    {
+                                        SIB alfa = key.Item1 as SIB;
+                                        NodeStatusindex temp = alfa.Status;
+                                        alfa.Status = NodeStatusindex.OpenF;
+                                        n1.Enqueue(alfa);
+                                        n1.SessionLenght += alfa.NodeLenght;
+                                        alfa.Status = NodeStatusindex.CloseS;
+                                        n2.Enqueue(alfa);
+                                        n2.SessionLenght += alfa.NodeLenght;
+                                        alfa.Status = temp;
+                                    }
+                                    else
+                                    {
+                                        SCB alfa = key.Item1 as SCB;
+                                        int temp = alfa.MultiplexSelect;
+                                        alfa.MultiplexSelect = 1;
+                                        n1.Enqueue(alfa);
+                                        n1.SessionLenght += alfa.NodeLenght;
+                                        alfa.MultiplexSelect = 0;
+                                        n2.Enqueue(alfa);
+                                        n2.SessionLenght += alfa.NodeLenght;
+                                        alfa.MultiplexSelect = temp;
+                                    }
+                                }
+                                else if (nd == key.Item2)
+                                {
+                                    if (nd is SIB)
+                                    {
+                                        SIB beta = key.Item2 as SIB;
+                                        NodeStatusindex temp = beta.Status;
+                                        beta.Status = NodeStatusindex.CloseS;
+                                        n1.Enqueue(beta);
+                                        n1.SessionLenght += beta.NodeLenght;
+                                        beta.Status = NodeStatusindex.OpenF;
+                                        n2.Enqueue(beta);
+                                        n2.SessionLenght += beta.NodeLenght;
+                                        beta.Status = temp;
+                                    }
+                                    else
+                                    {
+                                        SCB beta = key.Item2 as SCB;
+                                        int temp = beta.MultiplexSelect;
+                                        beta.MultiplexSelect = 0;
+                                        n1.Enqueue(beta);
+                                        n1.SessionLenght += beta.NodeLenght;
+                                        beta.MultiplexSelect = 1;
+                                        n2.Enqueue(beta);
+                                        n2.SessionLenght += beta.NodeLenght;
+                                        beta.MultiplexSelect = temp;
+
+                                    }
+                                }
+                                else
+                                {
+                                    n1.Enqueue(nd);
+                                    n2.Enqueue(nd);
+                                    n1.SessionLenght += nd.NodeLenght;
+                                    n2.SessionLenght += nd.NodeLenght;
+                                }
+                            }
+                        }
+
+                        calculateNodeFailourINSession(n1);
+                        calculateNodeFailourINSession(n2);
+
+                        //if (checkMatrixessWithSession(n1, true) && checkMatrixessWithSession(n2, true))
+                        {
+                            MatrixOfTestabilityMulties[key].Add(true);
+                            AdditionalSessions.Add(n1);
+                            AdditionalSessions.Add(n2);
+                        }
+                        //else
+                        //{
+                        //    throw new Exception("Not possible get your ass on the ice");
+                        //}
+
+                    }
+                    else
+                    {
+                        // horibly not doable
+                        //foreach (var situation in situation_session)
+                        //{
+                        //    // alfa base aproach
+                        //    Session n = new Session();
+                        //    foreach (Node nd in situation)
+                        //    {
+                                
+                        //        if (situation.SibStatusInThis(alfa).Value == NodeStatusindex.OpenF)
+                        //        {
+                        //            // we close the alfa and open beta
+                        //            if (nd.Parent == alfa)
+                        //            {
+                        //            }
+                                    
+                        //        }
+                        //        else if (situation.SibStatusInThis(alfa).Value == NodeStatusindex.CloseS)
+                        //        {
+                        //            //we open the alfa and close beta
+                        //        }
+                        //    }
+
+                        //    break;
+                        //}
+                    }
+
+                    
+                }
+                else
+                {
+                    throw new Exception("is Not possible go fuck yourself");
+                }
+
+            }
+            foreach (var sibling in sibPairs)
+            {
+                NonTestables.Remove(sibling);
+            }
+
             DCafterAdding = CapturedDCResults();
+        }
+
+        private List<Session> situationSession(Node alfa, Node beta)
+        {
+            var allsessions = Sessions.Union(AdditionalSessions);
+            var situation_session = allsessions.Where(x =>
+            {
+                if (alfa is SIB)
+                {
+                    var a = x.SibStatusInThis(alfa as SIB);
+                    if (a.HasValue == false || a.Value == NodeStatusindex.CloseS)
+                    {
+                        return false;
+                    }
+                }
+                if (beta is SIB)
+                {
+                    var b = x.SibStatusInThis(beta as SIB);
+                    if (b.HasValue == false || b.Value == NodeStatusindex.CloseS)
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            });
+            return situation_session.ToList();
         }
 
         private Session MakePathScb(Session s, SIB parent)
@@ -357,6 +538,8 @@ namespace IJTAG
                     n.SessionLenght += nd.NodeLenght;
                 }
             }
+            calculateNodeFailourINSession(n);
+
             return n;
         }
 
@@ -493,7 +676,7 @@ namespace IJTAG
             //}
         }
 
-        UInt64 DynamicDigingPathFinder(Node Node, Session path)
+        UInt64 DynamiHolowingPathFinder(Node Node, Session path)
         {
             path.Enqueue(Node);
 
@@ -602,7 +785,7 @@ namespace IJTAG
 
             if (next != null)
             {
-                Len += DynamicDigingPathFinder(next, path);
+                Len += DynamiHolowingPathFinder(next, path);
             }
 
             return Len;
